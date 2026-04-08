@@ -64,7 +64,7 @@ require_once 'header.php'; ?>
                 </div>
                 <div class="card-main">
                     <div class="rating-badge">✯ <?= number_format($g['avg_rating'], 1) ?></div>
-                    <div><?= (int)$g['rating_count'] ?> Reviews</div>
+                    <div class="text-muted"><?= (int)$g['rating_count'] ?> Reviews</div>
                 </div>
             </a>
         <?php endforeach ?>
