@@ -101,7 +101,7 @@ function getTopGames(mysqli $conn, int $limit): array
 
 function getAllGames(mysqli $conn): array
 {
-    $stmt = $conn->query("SELECT g.*, gr.name AS genre
+    $stmt = $conn->query("SELECT g.*, gr.title AS genre
                         FROM games g
                         LEFT JOIN genres gr ON g.genre_id = gr.id
                         ORDER BY g.title ASC");
@@ -175,7 +175,44 @@ function checkPasswordMatch(string $password, string $retype_password)
 
     if ($password !== $retype_password) {
         return "Retype password does not match!";
-function addGame(mysqli $conn, array $data) 
+    }
+}
+
+function getGameDetail(mysqli $conn, int $id)
+{
+    $stmt = $conn->prepare("SELECT g.*, gr.name AS genre
+                            FROM games g
+                            LEFT JOIN genres gr
+                            ON g.genre_id = gr.id
+                            WHERE g.id = ?");
+    $stmt->bind_param('i', $id);
+    if ($stmt->execute()) {
+        $res = $stmt->get_result();
+        if ($row = $res->fetch_assoc()) {
+            return $row;
+        }
+    }
+    return false;
+}
+
+function getGamePlatform(mysqli $conn, int $id)
+{
+    $stmt = $conn->prepare("SELECT p.name AS name FROM platforms p
+                            JOIN game_platforms gp
+                            ON p.id = gp.platform_id
+                            WHERE gp.game_id = ?");
+    $stmt->bind_param('i', $id);
+    $platforms = [];
+    if ($stmt->execute()) {
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $platforms[] = $row['name'];
+        }
+    }
+    return $platforms;
+}
+
+function addGame(mysqli $conn, array $data)
 {
     $stmt = $conn->prepare("
             INSERT INTO games (title, description, genre_id, release_year, developer, publisher, cover_image)
@@ -185,11 +222,12 @@ function addGame(mysqli $conn, array $data)
         return false;
     }
     $stmt->bind_param('ssiisss', $data['title'], $data['description'], (int)$data['genre_id'], (int)$data['release_year'], $data['developer'], $data['publisher'], $data['coverFile']);
-     if ($stmt->execute()) {
+    if ($stmt->execute()) {
         return $conn->insert_id;
     }
     return false;
 }
+
 function delGame(mysqli $conn, int $id)
 {
     $stmt = $conn->prepare("DELETE FROM games WHERE id = ?");
@@ -200,30 +238,33 @@ function delGame(mysqli $conn, int $id)
     if ($stmt->execute()) {
         return true;
     }
-    return false; 
+    return false;
 }
+
 function updateGame(mysqli $conn, array $data, int $id)
 {
     $upd = $conn->prepare("
             UPDATE games SET title=?, description=?, genre_id=?, release_year=?, developer=?, publisher=?, cover_image=?
             WHERE id=?");
-    if(!$upd) {
+    if (!$upd) {
         return false;
     }
     $upd->bind_param('ssiisssi', $data['title'], $data['description'], (int)$data['genre_id'], (int)$data['release_year'], $data['developer'], $data['publisher'], $data['coverFile'], $id);
-    if($upd->execute()) {
+    if ($upd->execute()) {
         return $upd->affected_rows > 0;
     }
     return false;
 }
+
+
 function updateGamePlatforms(mysqli $conn, int $game_id, array $platform_ids)
 {
     $del = $conn->prepare("DELETE FROM game_platforms WHERE game_id = ?");
-    if(!$del) return false;
+    if (!$del) return false;
     $del->bind_param('i', $game_id);
     $del->execute();
 
-    if(empty($platform_ids)) {
+    if (empty($platform_ids)) {
         return true;
     }
 
@@ -231,9 +272,9 @@ function updateGamePlatforms(mysqli $conn, int $game_id, array $platform_ids)
             INSERT INTO game_platforms(game_id, platform_id)
             VALUES(?,?)
     ");
-    if(!$ins) return false;
+    if (!$ins) return false;
 
-    foreach($platform_ids AS $pid) {
+    foreach ($platform_ids as $pid) {
         $pid = (int)$pid;
         $ins->bind_param('ii', $game_id, $pid);
         $ins->execute();

@@ -1,6 +1,6 @@
 <?php require_once 'db-connect.php';
 require_once 'functions.php';
-
+$page_title = 'Sign Up';
 $error_message = "";
 $sucess_message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
