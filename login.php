@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 require_once 'header.php'; ?>
-<section class="login">
+<section class="container-login">
     <div>
-        <form action="login.php" method="POST">
+        <form class="login-site" action="login.php" method="POST">
             <?php if (isset($_SESSION['flash_success'])): ?>
                 <div style="background: var(--success); color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
                     <?= $_SESSION['flash_success'] ?>
@@ -28,10 +28,11 @@ require_once 'header.php'; ?>
                     <?= $error_message ?>
                 </div>
             <?php endif; ?>
-            <p>Enter your username:</p>
-            <input type="text" name="username">
-            <p>Enter your password:</p>
-            <input type="password" name="password">
+            <h1>Login</h1>
+            <p1>Enter your username:</p>
+            <input class="input-text" type="text" name="username">
+            <p2>Enter your password:</p>
+            <input class type="password" name="password">
             <button type="submit">Login</button>
         </form>
         <a href="signup.php">I don't have any account.</a>

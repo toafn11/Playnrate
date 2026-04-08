@@ -66,6 +66,8 @@ ul { list-style: none; }
     padding:0 15%;
 }
 .nav-bar {
+    font-family: var(--font-brand);
+    font-size: 0.75rem;
     background-color: var(--bg-card) ;
     border-radius: var(--radius);
 }
@@ -86,7 +88,7 @@ ul { list-style: none; }
 }
 
 .nav-link:hover {
-    background-color: var(--accent);
+    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
 }
 
 .nav-bar li {
@@ -287,4 +289,112 @@ ul { list-style: none; }
     width: 100%;
     margin-top: auto;
     padding-top: 1rem;
+}
+
+.container-login {
+    font-family: var(--font-brand);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; 
+}
+
+.login-site {
+    background: var(--primary); 
+    padding: 40px;
+    border-radius: 20px;
+    width: 500px; 
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.login-site h1 {
+    text-align: center;
+}
+
+.login-site input {
+    width: 100%;
+    padding: 10px;
+    background: var(--bg-input);
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+}
+
+.login-site button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--font-brand);
+}
+
+.login-site button:hover {
+    background: linear-gradient(36deg, var(--accent-h) 6%, var(--accent));
+        box-shadow: 
+        0 0 10px #3b82f6,
+        0 0 20px #8b5cf6,
+        0 0 30px #ec4899;
+}
+
+.container a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #3b82f6;
+}
+
+.footer {
+    background: #171a21;
+    color: #c7d5e0;
+    padding: 40px 0;
+    margin-top: 50px;
+    font-size: 14px;
+}
+
+.footer-container {
+    font-family: var(--font-brand);
+    width: 80%;
+    margin: auto;
+}
+
+/* phần trên */
+.footer-top {
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #8f98a0;
+}
+
+/* chia cột */
+.footer-links {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-links div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-links h4 {
+    color: var(--primary-light);
+    margin-bottom: 10px;
+}
+
+/* link */
+.footer-links a {
+    color: #c7d5e0;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-links a:hover {
+    color: #66c0f4;
 }

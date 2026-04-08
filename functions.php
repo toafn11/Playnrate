@@ -281,3 +281,27 @@ function updateGamePlatforms(mysqli $conn, int $game_id, array $platform_ids)
     }
     return true;
 }
+function getReview(mysqli $conn, int $id) 
+{
+    $stmt = $conn->prepare("SELECT * FROM ratings WHERE game_id = ? ORDER BY created_at DESC");
+    if(!$stmt) return FALSE;
+
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+function addReview(mysqli $conn, Array $data) 
+{
+    $stmt = $conn->prepare("
+            INSERT INTO ratings(game_id, user_id, score, review_text) VALUES (?,?,?,?)
+    ");
+    if(!$stmt) return false;
+
+    $stmt->bind_param('iiis', (int)$data['game_id'], (int)$data['user_id'], (int)$data['score'], $data['review_text']);
+    if ($stmt->execute()) {
+        return $conn->insert_id;
+    }
+    return false;
+}

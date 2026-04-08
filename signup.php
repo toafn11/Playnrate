@@ -18,14 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 require_once 'header.php'; ?>
-<section class="login">
+<section class="container-login">
     <div>
-        <form action="signup.php" method="POST">
+        <form class="login-site" action="signup.php" method="POST">
             <?php if ($error_message !== ""): ?>
                 <div style="background: var(--danger); color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
                     <?= $error_message ?>
                 </div>
             <?php endif; ?>
+            <h1>Register</h1>
             <p>Enter your username:</p>
             <input type="text" name="username">
             <p>Enter your password:</p>
