@@ -202,8 +202,9 @@ ul { list-style: none; }
 
 .game-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow);
-    border-color: var(--primary-light);
+    border: linear-gradient(36deg, var(--accent-h) 6%, var(--accent));
+    box-shadow: 
+        0 0 30px var(--accent);
 }
 .game-card img {
     width: 100%;
@@ -334,10 +335,14 @@ ul { list-style: none; }
 
 .login-site button:hover {
     background: linear-gradient(36deg, var(--accent-h) 6%, var(--accent));
-        box-shadow: 
+    box-shadow: 
         0 0 10px #3b82f6,
         0 0 20px #8b5cf6,
         0 0 30px #ec4899;
+}
+
+.login-site a {
+    
 }
 
 .container a {
@@ -397,4 +402,100 @@ ul { list-style: none; }
 
 .footer-links a:hover {
     color: #66c0f4;
+}
+
+.container-detail {
+    font-family: var(--font-brand);
+    width: 90%;
+    margin: auto;
+    color: #c7d5e0;
+}
+
+/* layout chính */
+.game-intro {
+    display: flex;
+    gap: 30px;
+    background: radial-gradient(circle, var(--primary), black);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* ảnh game (bên trái) */
+.game-intro img {
+    width: auto;
+    height: 400PX;
+    border: 2px solid var(--primary-light);
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+/* cột phải */
+.game-intro > div:not(img) {
+    width: 35%;
+}
+
+/* title */
+.gi-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+/* mô tả */
+.gi-des {
+    font-size: 14px;
+    color: #acb2b8;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* info chung */
+.gi-year,
+.gi-genre,
+.gi-developer,
+.gi-pub {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+/* rating */
+.review-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: .75rem 1.25rem;
+    margin-bottom: 1.25rem;
+    width: fit-content;
+}
+.gi-avgrating {
+    color: var(--gold);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.gi-ratingcount {
+    font-size: 12px;
+    color: #8f98a0;
+    margin-bottom: 10px;
+}
+
+/* platform dạng tag */
+.gi-platform {
+    display: inline-block;
+    background: #2a475e;
+    padding: 5px 10px;
+    margin: 5px 5px 0 0;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+/* hover nhẹ giống Steam */
+.gi-platform:hover {
+    background: var(--accent);
+    color: #000;
+    cursor: pointer;
 }

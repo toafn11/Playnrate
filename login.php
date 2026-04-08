@@ -34,8 +34,8 @@ require_once 'header.php'; ?>
             <p2>Enter your password:</p>
             <input class type="password" name="password">
             <button type="submit">Login</button>
+            <a href="signup.php">I don't have any account.</a>
         </form>
-        <a href="signup.php">I don't have any account.</a>
     </div>
 </section>
 

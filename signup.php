@@ -34,8 +34,8 @@ require_once 'header.php'; ?>
             <p>Re-type your password:</p>
             <input type="password" name="retype">
             <button type="submit">Sign up</button>
+            <a href="login.php">I already have an account!</a>
         </form>
-        <a href="login.php">I already have an account!</a>
     </div>
 </section>
 
