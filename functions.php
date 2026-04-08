@@ -129,3 +129,52 @@ function getStat(mysqli $conn): array
         "Genres" => $totalGenres->fetch_assoc()['c']
     ];
 }
+
+
+function addUsers(mysqli $conn, string $username, string $pwd)
+{
+    $stmt = $conn->prepare("INSERT INTO users(username, password) VALUE (?,?)");
+    $stmt->bind_param("ss", $username, $pwd);
+    if ($stmt->execute())
+        return $stmt->insert_id;
+    return false;
+}
+
+function getLogin(mysqli $conn, string $username, string $pwd)
+{
+    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
+
+    $stmt->bind_param("s", $username);
+
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+
+            if (password_verify($pwd, $row['password'])) {
+                return $row['id'];
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
+function checkPasswordMatch(string $password, string $retype_password)
+{
+    if (empty($password) || empty($retype_password)) {
+        return "Password cannot blank!";
+    }
+
+    if (strlen($password) < 6) {
+        return "Please enter more than 6 digits password!";
+    }
+
+    if ($password !== $retype_password) {
+        return "Retype password does not match!";
+    }
+    return true;
+}

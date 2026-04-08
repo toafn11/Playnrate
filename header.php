@@ -29,6 +29,9 @@
                     <li>
                         <div class="nav-link"><a href="contact.php">Contact</a></div>
                     </li>
+                    <li>
+                        <div class="nav-link"><a href="login.php">Login</a></div>
+                    </li>
                 </ul>
             </nav>
         </div>
