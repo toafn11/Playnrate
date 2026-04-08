@@ -32,7 +32,7 @@ require_once 'header.php'; ?>
     <h3>Top Rating Games:</h3>
     <div class="grid-games">
         <?php foreach ($topGames as $g): ?>
-            <a href="" class="game-card">
+            <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
                 <img src="<?= coverSrc($g['cover_image']) ?>" alt=" <?= sanitize($g['title']) ?>">
                 <div class="card-title">
                     <p><?= sanitize($g['title']) ?></p>
@@ -53,7 +53,7 @@ require_once 'header.php'; ?>
     <div class="grid-games">
 
         <?php foreach ($recentGames as $g): ?>
-            <a href="" class="game-card">
+            <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
                 <img src="<?= coverSrc($g['cover_image']) ?>" alt=" <?= sanitize($g['title']) ?>">
                 <div class="card-title">
                     <p><?= sanitize($g['title']) ?></p>

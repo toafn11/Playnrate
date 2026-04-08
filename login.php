@@ -1,6 +1,6 @@
 <?php require_once 'db-connect.php';
 require_once 'functions.php';
-
+$page_title = 'Login';
 $error_message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = getLogin($conn, sanitize($_POST['username']), sanitize($_POST['password']));
