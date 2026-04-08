@@ -152,8 +152,39 @@ ul { list-style: none; }
     background: radial-gradient(circle, var(--primary), black);
 }
 
-.welcome-section h2 {
-    
+.welcome-section h1 {
+    font-family: var(--font-brand);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: .75rem;
+}
+
+.welcome-section p {
+    font-family: var(--font-brand);
+}
+
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(299px, 16fr));
+    gap: 1rem;
+    margin-bottom: 3.6rem;
+}
+.stat-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-align: center;
+}
+.stat-item h3 {
+     font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: .25rem; 
+}
+.stat-item p {
+     font-family: var(--font-brand); color: var(--text-muted); line-height: 1; margin-bottom: .25rem; 
 }
 .game-card {
     overflow: hidden;
@@ -202,13 +233,31 @@ ul { list-style: none; }
     height: 3em; 
 }
 .card-main {
+    padding: .75rem 1rem;
+    border-top: 1px solid var(--border);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 0 0.5rem;
-    margin-top: auto;
+    justify-content: space-between;
+    gap: .5rem;
 }
+
+.rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .2rem .5rem;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+.rating-badge .icon { font-size: .9rem; }
+
+.stars { color: var(--gold); letter-spacing: 1px; font-size: 1rem; }
+.star.empty { color: var(--border); }
+.text-muted {color: var(--text); font-size: 0.75rem;}
 
 .genres-box {
     width: max-content; 
@@ -224,6 +273,11 @@ ul { list-style: none; }
     font-size: small;
     justify-content: center;
     font-weight: bolder;
+}
+
+.release-box {
+    font-color: var(--accent);
+    font-size: smaller;
 }
 
 .card-info{

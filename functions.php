@@ -175,6 +175,68 @@ function checkPasswordMatch(string $password, string $retype_password)
 
     if ($password !== $retype_password) {
         return "Retype password does not match!";
+function addGame(mysqli $conn, array $data) 
+{
+    $stmt = $conn->prepare("
+            INSERT INTO games (title, description, genre_id, release_year, developer, publisher, cover_image)
+            VALUES (?,?,?,?,?,?,?)
+        ");
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('ssiisss', $data['title'], $data['description'], (int)$data['genre_id'], (int)$data['release_year'], $data['developer'], $data['publisher'], $data['coverFile']);
+     if ($stmt->execute()) {
+        return $conn->insert_id;
+    }
+    return false;
+}
+function delGame(mysqli $conn, int $id)
+{
+    $stmt = $conn->prepare("DELETE FROM games WHERE id = ?");
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('i', $id);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return false; 
+}
+function updateGame(mysqli $conn, array $data, int $id)
+{
+    $upd = $conn->prepare("
+            UPDATE games SET title=?, description=?, genre_id=?, release_year=?, developer=?, publisher=?, cover_image=?
+            WHERE id=?");
+    if(!$upd) {
+        return false;
+    }
+    $upd->bind_param('ssiisssi', $data['title'], $data['description'], (int)$data['genre_id'], (int)$data['release_year'], $data['developer'], $data['publisher'], $data['coverFile'], $id);
+    if($upd->execute()) {
+        return $upd->affected_rows > 0;
+    }
+    return false;
+}
+function updateGamePlatforms(mysqli $conn, int $game_id, array $platform_ids)
+{
+    $del = $conn->prepare("DELETE FROM game_platforms WHERE game_id = ?");
+    if(!$del) return false;
+    $del->bind_param('i', $game_id);
+    $del->execute();
+
+    if(empty($platform_ids)) {
+        return true;
+    }
+
+    $ins = $conn->prepare("
+            INSERT INTO game_platforms(game_id, platform_id)
+            VALUES(?,?)
+    ");
+    if(!$ins) return false;
+
+    foreach($platform_ids AS $pid) {
+        $pid = (int)$pid;
+        $ins->bind_param('ii', $game_id, $pid);
+        $ins->execute();
     }
     return true;
 }
