@@ -1,19 +1,38 @@
-<?php
-require_once 'header.php';
-?>
+<!DOCTYPE html>
+<html lang="en">
 
-<section class="container" style="text-align: center; padding: 100px 20px; min-height: 60vh;">
-    <h1 style="font-size: 80px; color: var(--accent); margin-bottom: 10px;">404</h1>
-    <h2 style="margin-bottom: 20px;">Trang không tồn tại</h2>
-    <p style="color: var(--text-muted); margin-bottom: 30px;">
-        Xin lỗi, tựa game hoặc đường dẫn bạn đang tìm kiếm không tồn tại, <br> hoặc đã bị xóa khỏi hệ thống PlayNRate.
-    </p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    <a href="index.php" class="btn btn-primary" style="padding: 10px 25px; font-size: 1.1rem;">
-        Quay lại Trang Chủ
+        .error-image {
+            width: 100vw;
+            object-fit: contain;
+            aspect-ratio: 2 / 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.php" title="Back" style="display: block; width: 100%; height: 100%;">
+        <img src="images/404.png" alt="404" class="error-image">
     </a>
-</section>
 
-<?php
-require_once 'footer.php';
-?>
+</body>
+
+</html>

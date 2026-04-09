@@ -152,7 +152,7 @@ function getLogin(mysqli $conn, string $username, string $pwd)
         if ($row = $result->fetch_assoc()) {
 
             if (password_verify($pwd, $row['password'])) {
-                return $row['id'];
+                return (int)$row['id'];
             } else {
                 return false;
             }
@@ -314,4 +314,28 @@ function addReview(mysqli $conn, array $data)
         return $conn->insert_id;
     }
     return false;
+}
+
+function viewMyReview(mysqli $conn, int $userid)
+{
+    $sql = "SELECT r.*, g.title AS game_title, g.id AS game_id, g.cover_image
+            FROM ratings r
+            JOIN games g ON r.game_id = g.id
+            WHERE r.user_id = ?
+            ORDER BY r.created_at DESC";
+
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) return [];
+
+    $stmt->bind_param('i', $userid);
+    $reviews = [];
+
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $reviews[] = $row;
+        }
+    }
+    return $reviews;
 }

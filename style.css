@@ -91,6 +91,12 @@ ul { list-style: none; }
     background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
 }
 
+.nav-link-active {
+    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
+    padding: auto;
+    border-radius: var(--radius);
+}
+
 .nav-bar li {
     padding: .25rem .25rem;
     border-radius: var(--radius);
@@ -98,7 +104,7 @@ ul { list-style: none; }
     font-size: larger;
 }
 
-.nav-link a:hover, .nav-link a:focus {
+.nav-link a:hover, .nav-link a:focus, .nav-link-active a:hover {
     color: var(--text);
 }
 
