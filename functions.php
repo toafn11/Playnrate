@@ -101,10 +101,10 @@ function getTopGames(mysqli $conn, int $limit): array
 
 function getAllGames(mysqli $conn): array
 {
-    $stmt = $conn->query("SELECT g.*, gr.title AS genre
+    $stmt = $conn->query("SELECT g.*, gr.name AS genre
                         FROM games g
                         LEFT JOIN genres gr ON g.genre_id = gr.id
-                        ORDER BY g.title ASC");
+                        ORDER BY created_at DESC");
     return $stmt->fetch_all(MYSQLI_ASSOC);
 }
 
@@ -338,4 +338,29 @@ function viewMyReview(mysqli $conn, int $userid)
         }
     }
     return $reviews;
+}
+
+function createReview(mysqli $conn, int $userid, int $gameid, int $score, string $text)
+{
+    $stmt = $conn->prepare("INSERT INTO ratings(game_id, user_id, score, review_text)
+                            VALUES (?,?,?,?)");
+    $stmt->bind_param('iiis', $gameid, $userid, $score, $text);
+    if ($stmt->execute()) return true;
+    return false;
+}
+
+
+function checkUserReviewed(mysqli $conn, int $userid, int $gameid)
+{
+    $stmt = $conn->prepare("SELECT COUNT(*) AS count FROM ratings WHERE user_id = ? AND game_id = ?");
+    if (!$stmt) return false;
+    $stmt->bind_param("ii", $userid, $gameid);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+
+    if ($result['count'] > 0) {
+        return true;
+    }
+
+    return false;
 }
