@@ -23,7 +23,7 @@
                         <div class="nav-link<?= $currentPage === 'index' ? '-active' : '' ?>"><a href="index.php">Home</a></div>
                     </li>
                     <li>
-                        <div class="nav-link"><a href="games.php">Games</a></div>
+                        <div class="nav-link<?= $currentPage === 'games' ? '-active' : '' ?>"><a href="games.php">Games</a></div>
                     </li>
                     <li>
                         <div class="nav-link"><a href="reviews.php">Reviews</a></div>

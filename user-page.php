@@ -2,44 +2,66 @@
 require_once 'functions.php';
 
 if (!isset($_SESSION['userid'])) {
-    $_SESSION['flash_error'] = "You're not login yet!";
+    $_SESSION['flash_error'] = "You're not logged in yet!";
     header("Location: login.php");
     exit;
 }
 
-
 $reviews = viewMyReview($conn, $_SESSION['userid']);
-
+$pageTitle = "My Profile";
 require_once 'header.php';
 ?>
-<section class="container">
-    <div class="user-main">
-        <h2>HELLO, @<?= $_SESSION['username'] ?>!</h2>
-        <div class="nav-link"><a href="logout.php">Logout➜]</a></div>
+
+<section class="container" style="margin-top: 2rem; margin-bottom: 4rem;">
+
+    <div class="user-hero">
+        <div>
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 5px;">WELCOME BACK,</p>
+            <h2>@<?= $_SESSION['username'] ?></h2>
+        </div>
+        <a href="logout.php" class="btn btn-danger">Logout ➜</a>
     </div>
-    <div class="game-reviews">
+
+    <h3 style="margin-bottom: 1.5rem; font-family: var(--font-brand);">My Reviews (<?= count($reviews) ?>)</h3>
+
+    <div class="my-reviews-grid">
         <?php if (empty($reviews)): ?>
-            <p>You haven't reviewed any games yet!</p>
+            <div class="stat-item" style="grid-column: 1/-1;">
+                <p>You haven't reviewed any games yet! Go find some games to rate.</p>
+                <br>
+                <a href="games.php" class="btn btn-primary">Browse Games</a>
+            </div>
         <?php else: ?>
-            <?php foreach ($reviews as $rev): ?>
-                <a href="game-detail.php?id=<?= (int)$rev['game_id'] ?>" class="game-card">
-                    <img src="<?= coverSrc($rev['cover_image']) ?>" alt=" <?= sanitize($rev['game_title']) ?>">
-                    <div class="card-title">
-                        <p><?= $rev['game_title'] ?></p>
+            <?php foreach ($reviews as $rev):
+                // Tính toán màu sắc dựa trên điểm số (áp dụng bảng HSL đã học)
+                $score = (int)$rev['score'];
+                $level = ($score < 1) ? 1 : (($score > 10) ? 10 : $score);
+            ?>
+                <div class="user-review-card">
+                    <div class="review-card-header">
+                        <img src="<?= coverSrc($rev['cover_image']) ?>" alt="<?= sanitize($rev['game_title']) ?>">
+                        <div class="user-score-badge" style="background-color: var(--score-<?= $level ?>);">
+                            ⭐ <?= $score ?>/10
+                        </div>
                     </div>
 
-                </a>
-                <div class="review-card" style="border: 1px solid var(--border); padding: 10px; margin-bottom: 10px;">
-                    <p>⭐<?= $rev['score'] ?>/10</p>
-                    <p>"<?= $rev['review_text'] ?>"</p>
-                    <small>at <?= $rev['created_at'] ?></small>
+                    <div class="review-card-body">
+                        <h3><?= sanitize($rev['game_title']) ?></h3>
+                        <p class="review-text">"<?= sanitize($rev['review_text']) ?>"</p>
+
+                        <div class="review-card-footer">
+                            <span>Reviewed on <?= date('M d, Y', strtotime($rev['created_at'])) ?></span>
+                        </div>
+                    </div>
+
+                    <a href="game-detail.php?id=<?= (int)$rev['game_id'] ?>"
+                        style="text-align: center; padding: 10px; background: var(--bg-input); border-top: 1px solid var(--border); font-size: 0.8rem; font-weight: bold;">
+                        VIEW GAME PAGE
+                    </a>
                 </div>
             <?php endforeach; ?>
         <?php endif ?>
-
     </div>
 </section>
 
-<?php
-require_once 'footer.php';
-?>
+<?php require_once 'footer.php'; ?>
