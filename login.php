@@ -5,7 +5,10 @@ $error_message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = getLogin($conn, sanitize($_POST['username']), sanitize($_POST['password']));
     if ($user_id != false) {
+        session_regenerate_id(true);
         $_SESSION['userid'] = $user_id;
+        $_SESSION['username'] = strtolower($_POST['username']);
+        $_SESSION['flash_success'] = "Login successfully!";
         redirect("index.php");
         exit;
     } else $error_message = "Username or password is incorrect!";
@@ -30,11 +33,11 @@ require_once 'header.php'; ?>
             <?php endif; ?>
             <h1>Login</h1>
             <p1>Enter your username:</p>
-            <input class="input-text" type="text" name="username">
-            <p2>Enter your password:</p>
-            <input class type="password" name="password">
-            <button type="submit">Login</button>
-            <a href="signup.php">I don't have any account.</a>
+                <input class="input-text" type="text" name="username">
+                <p2>Enter your password:</p>
+                    <input class type="password" name="password">
+                    <button type="submit">Login</button>
+                    <a href="signup.php">I don't have any account.</a>
         </form>
     </div>
 </section>

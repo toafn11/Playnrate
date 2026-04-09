@@ -29,6 +29,7 @@ require_once 'header.php'; ?>
             <p>Genres</p>
         </div>
     </div>
+
     <h3>Top Rating Games:</h3>
     <div class="grid-games">
         <?php foreach ($topGames as $g): ?>

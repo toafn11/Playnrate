@@ -4,13 +4,13 @@ $page_title = 'Sign Up';
 $error_message = "";
 $sucess_message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    $username = strtolower($_POST['username']);
     $pwd = $_POST['password'];
     $repwd = $_POST['retype'];
 
     $signup = checkPasswordMatch($pwd, $repwd);
     if ($signup === true) {
-        if (addUsers($conn, $username, password_hash($pwd, PASSWORD_DEFAULT)) === true) {
+        if (addUsers($conn, $username, password_hash($pwd, PASSWORD_DEFAULT)) !== false) {
             $_SESSION['flash_success'] = "Sign up successfully! You can login.";
             redirect("login.php");
         } else $error_message = "Error in adding user.";

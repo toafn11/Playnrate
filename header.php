@@ -1,10 +1,12 @@
+<?php $currentPage = basename($_SERVER['PHP_SELF'], '.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($page_title) ? $page_title . ' | PlayNRate' : 'PlayNRate' ?></title>
+    <title><?= isset($page_title) ? $page_title . ' | Playnrate' : 'Playnrate' ?></title>
     <link rel="stylesheet" href="style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +20,7 @@
             <nav class="nav-bar">
                 <ul class="nav-list">
                     <li>
-                        <div class="nav-link"><a href="index.php">Home</a></div>
+                        <div class="nav-link<?= $currentPage === 'index' ? '-active' : '' ?>"><a href="index.php">Home</a></div>
                     </li>
                     <li>
                         <div class="nav-link"><a href="games.php">Games</a></div>
@@ -30,7 +32,19 @@
                         <div class="nav-link"><a href="contact.php">Contact</a></div>
                     </li>
                     <li>
-                        <div class="nav-link"><a href="login.php">Login</a></div>
+                        <?php if (isset($_SESSION['userid'])): ?>
+                            <div class="nav-link<?= $currentPage === 'user-page' ? '-active' : '' ?>">
+                                <a href="user-page.php">
+                                    Hi, @<?= $_SESSION['username'] ?>
+                                </a>
+                            </div>
+                        <?php else: ?>
+                            <div class="nav-link<?= $currentPage === 'login' ? '-active' : '' ?>">
+                                <a href="login.php">
+                                    Login
+                                </a>
+                            </div>
+                        <?php endif ?>
                     </li>
                 </ul>
             </nav>
@@ -38,3 +52,11 @@
     </header>
 
     <main class="site-main">
+        <?php if (isset($_SESSION['flash_success'])): ?>
+            <div style="background: var(--success); color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <?= $_SESSION['flash_success'] ?>
+            </div>
+            <?php
+            unset($_SESSION['flash_success']);
+            ?>
+        <?php endif; ?>
