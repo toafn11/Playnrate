@@ -16,7 +16,8 @@
 <body>
     <header class="header-site">
         <div class="header-inside">
-            <h1 class="logo">PlayNRate</h1>
+            <a class="logo-icon" title="Logo" href="index.php"></a>
+            <div class="logo-text">Playnrate</div>
             <nav class="nav-bar">
                 <ul class="nav-list">
                     <li>
@@ -26,10 +27,7 @@
                         <div class="nav-link<?= $currentPage === 'games' ? '-active' : '' ?>"><a href="games.php">Games</a></div>
                     </li>
                     <li>
-                        <div class="nav-link"><a href="reviews.php">Reviews</a></div>
-                    </li>
-                    <li>
-                        <div class="nav-link"><a href="contact.php">Contact</a></div>
+                        <div class="nav-link<?= $currentPage === 'gane-add' ? '-active' : '' ?>"><a href="game-add.php">Add Game</a></div>
                     </li>
                     <li>
                         <?php if (isset($_SESSION['userid'])): ?>

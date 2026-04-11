@@ -9,7 +9,7 @@ if ($game === false) redirect('games.php');
 
 $platforms = getGamePlatform($conn, $id);
 
-$rvcheck = checkUserReviewed($conn, $_SESSION['userid'], $id);
+if (isset($_SESSION['userid'])) $rvcheck = checkUserReviewed($conn, $_SESSION['userid'], $id);
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['submit_review']) && !$rvcheck) {
     $score = (int)($_POST['score'] ?? 0);
@@ -59,7 +59,7 @@ require_once 'header.php';
             </div>
 
         </div>
-        <?php if ($rvcheck) : ?>
+        <?php if (isset($rvcheck) && $rvcheck) : ?>
             <div class="write-review-box">
                 <p>You have reviewed this game!</p>
             </div>
@@ -83,6 +83,10 @@ require_once 'header.php';
                 <p>You must login to write a review!</p>
             </div>
         <?php endif ?>
+        <div>
+            <a href="game-edit.php?id=<?= $id ?>">Edit this game.</a>
+            <a href="game-delete.php?id=<?= $id ?>">Delete this game.</a>
+        </div>
     </div>
     <div class="game-reviews">
         <?php if (empty($reviews)): ?>
