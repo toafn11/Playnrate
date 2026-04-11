@@ -38,7 +38,7 @@ function uploadCover(array $file, string &$error): string|false
 {
     $allowed   = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     $maxBytes  = 2 * 1024 * 1024; // 2 MB
-    $uploadDir = __DIR__ . '/../uploads/';
+    $uploadDir = __DIR__ . '/uploads/';
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $error = 'Upload error code: ' . $file['error'];
@@ -65,15 +65,18 @@ function uploadCover(array $file, string &$error): string|false
     return $filename;
 }
 
-/**
- * Return a cover image path (falls back to placeholder).
- */
-function coverSrc(string $filename): string
+
+function coverSrc(?string $filename): string
 {
-    $path = __DIR__ . '/../uploads/' . $filename;
-    if ($filename && file_exists($path)) {
-        return 'uploads/' . htmlspecialchars($filename);
+    if (empty($filename)) {
+        return 'images/placeholder.png';
     }
+    $path = __DIR__ . '/uploads/' . $filename;
+
+    if (file_exists($path)) {
+        return '/PlayNRate/uploads/' . htmlspecialchars($filename);
+    }
+
     return 'images/placeholder.png';
 }
 
@@ -214,73 +217,126 @@ function getGamePlatform(mysqli $conn, int $id)
 
 function addGame(mysqli $conn, array $data)
 {
-    $stmt = $conn->prepare("
-            INSERT INTO games (title, description, genre_id, release_year, developer, publisher, cover_image)
-            VALUES (?,?,?,?,?,?,?)
-        ");
-    if (!$stmt) {
-        return false;
+    $errors_list = [];
+
+    $add = $conn->prepare("INSERT INTO games(title, description, genre_id, release_year, developer, publisher, cover_image)
+                            VAlUES (?,?,?,?,?,?,?)");
+    if (!$add) return ["db-error" => $conn->error];
+
+    $add->bind_param(
+        'ssiisss',
+        $data['title'],
+        $data['description'],
+        $data['genre_id'],
+        $data['release_year'],
+        $data['developer'],
+        $data['publisher'],
+        $data['cover_image'],
+    );
+
+    if (!$add->execute()) $errors_list['game-add'] = "Cannot add game info.";
+
+    $newid = $add->insert_id;
+    if (!empty($data['platforms']) && is_array($data['platforms'])) {
+        $ins = $conn->prepare("INSERT INTO game_platforms(game_id, platform_id) VALUES(?,?)");
+        foreach ($data['platforms'] as $pid) {
+            $platform_id = (int)$pid;
+            $ins->bind_param('ii', $newid, $platform_id);
+            $ins->execute();
+        }
     }
-    $stmt->bind_param('ssiisss', $data['title'], $data['description'], (int)$data['genre_id'], (int)$data['release_year'], $data['developer'], $data['publisher'], $data['coverFile']);
-    if ($stmt->execute()) {
-        return $conn->insert_id;
-    }
-    return false;
+
+    return empty($errors_list) ? (int)$newid : $errors_list;
 }
 
-function delGame(mysqli $conn, int $id)
+function delGame(mysqli $conn, array $data)
 {
-    $stmt = $conn->prepare("DELETE FROM games WHERE id = ?");
-    if (!$stmt) {
-        return false;
+    if ($data['cover_image'] && $data['cover_image'] !== 'default-cover.jpg') {
+        $path = __DIR__ . '/uploads/' . $data['cover_image'];
+        if (file_exists($path)) unlink($path);
     }
-    $stmt->bind_param('i', $id);
-    if ($stmt->execute()) {
-        return true;
-    }
+    $del = $conn->prepare("DELETE FROM games WHERE id = ?");
+    $del->bind_param('i', $data['id']);
+    if ($del->execute()) return true;
     return false;
 }
 
 function updateGame(mysqli $conn, array $data, int $id)
 {
-    $upd = $conn->prepare("
-            UPDATE games SET title=?, description=?, genre_id=?, release_year=?, developer=?, publisher=?, cover_image=?
-            WHERE id=?");
-    if (!$upd) {
-        return false;
+    $errors_list = [];
+
+    $upd = $conn->prepare("UPDATE games SET title=?, description=?, genre_id=?, release_year=?, developer=?, publisher=?, cover_image=? WHERE id=?");
+    if (!$upd) return ["db-error" => $conn->error];
+
+    $upd->bind_param(
+        'ssiisssi',
+        $data['title'],
+        $data['description'],
+        $data['genre_id'],
+        $data['release_year'],
+        $data['developer'],
+        $data['publisher'],
+        $data['cover_image'],
+        $id
+    );
+
+    if (!$upd->execute()) $errors_list['game-update'] = "Cannot update game info.";
+
+    $del = $conn->prepare("DELETE FROM game_platforms WHERE game_id = ?");
+    $del->bind_param('i', $id);
+    $del->execute();
+
+    if (!empty($data['platforms']) && is_array($data['platforms'])) {
+        $ins = $conn->prepare("INSERT INTO game_platforms(game_id, platform_id) VALUES(?,?)");
+        foreach ($data['platforms'] as $pid) {
+            $platform_id = (int)$pid;
+            $ins->bind_param('ii', $id, $platform_id);
+            $ins->execute();
+        }
     }
-    $upd->bind_param('ssiisssi', $data['title'], $data['description'], (int)$data['genre_id'], (int)$data['release_year'], $data['developer'], $data['publisher'], $data['coverFile'], $id);
-    if ($upd->execute()) {
-        return $upd->affected_rows > 0;
+
+    return empty($errors_list) ? true : $errors_list;
+}
+
+function checkValidForm(array $data): array
+{
+    $errors = [];
+    if (empty(trim($data['title'])) || strlen($data['title']) < 2)
+        $errors['title'] = 'Title is required (min 2 chars).';
+
+    if (empty($data['genre_id']))
+        $errors['genre_id'] = 'Please select a genre.';
+
+    $year = (int)($data['release_year'] ?? 0);
+    if ($year < 1970 || $year > (date('Y') + 2))
+        $errors['release_year'] = 'Enter a valid release year (1970 - ' . (date('Y') + 2) . ').';
+
+    if (empty(trim($data['description'])) || strlen($data['description']) < 10)
+        $errors['description'] = 'Description is required (min 10 chars).';
+
+    return $errors;
+}
+
+function checkImgPath(string $currentImg)
+{
+    if (empty($_FILES['cover_image']['name'])) {
+        return $currentImg;
     }
+
+    $uploadError = '';
+    $uploadedFileName = uploadCover($_FILES['cover_image'], $uploadError);
+
+    if ($uploadedFileName) {
+        if ($currentImg !== 'default-cover.jpg') {
+            $oldPath = __DIR__ . '/uploads/' . $currentImg;
+            if (file_exists($oldPath)) @unlink($oldPath);
+        }
+        return $uploadedFileName;
+    }
+
     return false;
 }
 
-
-function updateGamePlatforms(mysqli $conn, int $game_id, array $platform_ids)
-{
-    $del = $conn->prepare("DELETE FROM game_platforms WHERE game_id = ?");
-    if (!$del) return false;
-    $del->bind_param('i', $game_id);
-    $del->execute();
-
-    if (empty($platform_ids)) {
-        return true;
-    }
-
-    $ins = $conn->prepare("
-            INSERT INTO game_platforms(game_id, platform_id)
-            VALUES(?,?)
-    ");
-    if (!$ins) return false;
-
-    foreach ($platform_ids as $pid) {
-        $pid = (int)$pid;
-        $ins->bind_param('ii', $game_id, $pid);
-        $ins->execute();
-    }
-    return true;
-}
 function getReview(mysqli $conn, int $id)
 {
     $stmt = $conn->prepare("SELECT r.*, u.username FROM ratings r
@@ -363,4 +419,15 @@ function checkUserReviewed(mysqli $conn, int $userid, int $gameid)
     }
 
     return false;
+}
+
+
+function getAllGenres(mysqli $conn)
+{
+    return $conn->query("SELECT * FROM genres ORDER BY name");
+}
+
+function getAllPlatforms(mysqli $conn)
+{
+    return $conn->query("SELECT * FROM platforms ORDER BY name");
 }

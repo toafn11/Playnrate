@@ -71,4 +71,73 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+    // Form game edit
+    const gameForm = document.getElementById('gameForm');
+    if (gameForm) {
+        gameForm.addEventListener('submit', e => {
+            let valid = true;
+
+            // Title
+            const title = document.getElementById('title');
+            if (title && title.value.trim().length < 2) {
+                showFieldError('title', 'Title must be at least 2 characters.');
+                valid = false;
+            } else { clearFieldError('title'); }
+
+            // Genre
+            const genre = document.getElementById('genre_id');
+            if (genre && !genre.value) {
+                showFieldError('genre_id', 'Please select a genre.');
+                valid = false;
+            } else { clearFieldError('genre_id'); }
+
+            // Year
+            const year = document.getElementById('release_year');
+            if (year) {
+                const y = parseInt(year.value);
+                if (isNaN(y) || y < 1970 || y > new Date().getFullYear() + 2) {
+                    showFieldError('release_year', 'Enter a valid release year (1970 – present).');
+                    valid = false;
+                } else { clearFieldError('release_year'); }
+            }
+
+            // Description
+            const desc = document.getElementById('description');
+            if (desc && desc.value.trim().length < 10) {
+                showFieldError('description', 'Description must be at least 10 characters.');
+                valid = false;
+            } else { clearFieldError('description'); }
+
+            if (!valid) e.preventDefault();
+        });
+    }
+    // File upload
+    const fileInput   = document.getElementById('cover_image');
+    const previewWrap = document.getElementById('imagePreview');
+
+    if (fileInput && previewWrap) {
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showFieldError('cover_image', 'Please select a valid image file.');
+                fileInput.value = '';
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                showFieldError('cover_image', 'Image must be smaller than 2 MB.');
+                fileInput.value = '';
+                return;
+            }
+
+            clearFieldError('cover_image');
+            const reader = new FileReader();
+            reader.onload = e => {
+                previewWrap.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 });

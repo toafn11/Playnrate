@@ -118,7 +118,51 @@ ul { list-style: none; }
 .nav-link a:hover, .nav-link a:focus, .nav-link-active a:hover {
     color: var(--text);
 }
+.logo-icon {
+    display: block;
+     
+    height: 100px; 
+    width: 100px;      
+    flex-shrink: 0;   
+    background: transparent;
+    background-image: linear-gradient(to left, var(--accent-h), var(--accent));
+    background-size: cover; 
+    
+    -webkit-mask-image: url("images/PNR_logo.png");
+    mask-image: url("images/PNR_logo.png");
+    
+    -webkit-mask-size: contain; 
+    mask-size: contain;
+    
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
 
+    transition: all 0.3s ease;
+}
+
+.logo-icon:hover {
+    background-color: transparent;
+    background-image: linear-gradient(to left, var(--accent), var(--accent-h));
+}
+
+.logo-text {
+    font-family: var(--font-brand);
+    font-size: 2rem;
+    color: transparent;
+    background: linear-gradient(135deg, var(--accent), var(--primary-light), var(--accent-h));
+    -webkit-background-clip: text;
+    background-clip: text;
+    white-space: nowrap;
+}
+
+.logo-text:hover {
+    background: linear-gradient(135deg, var(--accent-h), var(--primary-light), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    white-space: nowrap;
+}
 .btn {
     display: inline-flex;
     align-items: center;
