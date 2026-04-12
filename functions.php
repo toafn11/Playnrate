@@ -111,6 +111,59 @@ function getAllGames(mysqli $conn): array
     return $stmt->fetch_all(MYSQLI_ASSOC);
 }
 
+function getFilteredGames(mysqli $conn, string $search, int $genreId, string $sort, int $perPage, int $page): array
+{
+    $where  = [];
+    $params = [];
+    $types  = '';
+
+    if ($search !== '') {
+        $where[]  = 'g.title LIKE ?';
+        $params[] = '%' . $search . '%';
+        $types   .= 's';
+    }
+    if ($genreId > 0) {
+        $where[]  = 'g.genre_id = ?';
+        $params[] = $genreId;
+        $types   .= 'i';
+    }
+
+    $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    $orderMap = [
+        'newest'       => 'g.created_at DESC',
+        'oldest'       => 'g.created_at ASC',
+        'top_rated'    => 'g.avg_rating DESC',
+        'most_reviews' => 'g.rating_count DESC',
+        'a_z'          => 'g.title ASC',
+        'z_a'          => 'g.title DESC',
+    ];
+    $orderBy = $orderMap[$sort] ?? 'g.created_at DESC';
+
+    $offset = ($page - 1) * $perPage;
+
+    $countSql = "SELECT COUNT(*) AS total FROM games g LEFT JOIN genres gr ON g.genre_id = gr.id $whereClause";
+    if ($params) {
+        $stmt = $conn->prepare($countSql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $total = (int)$stmt->get_result()->fetch_assoc()['total'];
+    } else {
+        $total = (int)$conn->query($countSql)->fetch_assoc()['total'];
+    }
+
+    $sql        = "SELECT g.*, gr.name AS genre FROM games g LEFT JOIN genres gr ON g.genre_id = gr.id $whereClause ORDER BY $orderBy LIMIT ? OFFSET ?";
+    $dataParams = array_merge($params, [$perPage, $offset]);
+    $dataTypes  = $types . 'ii';
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($dataTypes, ...$dataParams);
+    $stmt->execute();
+    $games = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    return ['games' => $games, 'total' => $total];
+}
+
 function getRecentGames(mysqli $conn, int $limit): array
 {
     $stmt = $conn->query("SELECT g.*, gr.name AS genre
