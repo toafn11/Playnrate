@@ -5,8 +5,8 @@ $page_title = 'Games';
 
 $search  = trim($_GET['search'] ?? '');
 $genreId = (int)($_GET['genre'] ?? 0);
-$sort    = in_array($_GET['sort'] ?? '', ['newest','oldest','top_rated','most_reviews','a_z','z_a'])
-           ? $_GET['sort'] : 'newest';
+$sort    = in_array($_GET['sort'] ?? '', ['newest', 'oldest', 'top_rated', 'most_reviews', 'a_z', 'z_a'])
+    ? $_GET['sort'] : 'newest';
 $page    = max(1, (int)($_GET['page'] ?? 1));
 $perPage = 18;
 
@@ -18,17 +18,7 @@ $page       = min($page, $totalPages);
 
 $genres = getAllGenres($conn);
 
-// Build query string helper (preserves current filters, replaces $key)
-function buildQuery(array $override): string
-{
-    $base = [
-        'search' => $_GET['search'] ?? '',
-        'genre'  => $_GET['genre']  ?? '',
-        'sort'   => $_GET['sort']   ?? 'newest',
-        'page'   => $_GET['page']   ?? 1,
-    ];
-    return http_build_query(array_filter(array_merge($base, $override), fn($v) => $v !== '' && $v !== '0' && $v !== 0));
-}
+
 
 require_once 'header.php'; ?>
 
@@ -42,29 +32,29 @@ require_once 'header.php'; ?>
 <section class="container">
     <form class="filter-bar" method="get" action="games.php">
         <div class="filter-search">
-            <input type="text" name="search" placeholder="Search games…"
-                   value="<?= sanitize($search) ?>" autocomplete="off">
+            <input type="text" name="search" placeholder="Search games…" value="<?= sanitize($search) ?>" autocomplete="off">
         </div>
         <div class="filter-selects">
             <select name="genre">
                 <option value="">All Genres</option>
                 <?php while ($g = $genres->fetch_assoc()): ?>
-                    <option value="<?= (int)$g['id'] ?>"<?= $genreId === (int)$g['id'] ? ' selected' : '' ?>>
+                    <option value="<?= (int)$g['id'] ?>" <?= $genreId === (int)$g['id'] ? ' selected' : '' ?>>
                         <?= sanitize($g['name']) ?>
                     </option>
                 <?php endwhile ?>
             </select>
+
             <select name="sort">
-                <option value="newest"       <?= $sort === 'newest'       ? 'selected' : '' ?>>Newest</option>
-                <option value="oldest"       <?= $sort === 'oldest'       ? 'selected' : '' ?>>Oldest</option>
-                <option value="top_rated"    <?= $sort === 'top_rated'    ? 'selected' : '' ?>>Top Rated</option>
+                <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest</option>
+                <option value="oldest" <?= $sort === 'oldest' ? 'selected' : '' ?>>Oldest</option>
+                <option value="top_rated" <?= $sort === 'top_rated' ? 'selected' : '' ?>>Top Rated</option>
                 <option value="most_reviews" <?= $sort === 'most_reviews' ? 'selected' : '' ?>>Most Reviews</option>
-                <option value="a_z"          <?= $sort === 'a_z'          ? 'selected' : '' ?>>A – Z</option>
-                <option value="z_a"          <?= $sort === 'z_a'          ? 'selected' : '' ?>>Z – A</option>
+                <option value="a_z" <?= $sort === 'a_z' ? 'selected' : '' ?>>A – Z</option>
+                <option value="z_a" <?= $sort === 'z_a' ? 'selected' : '' ?>>Z – A</option>
             </select>
-            <button type="submit" class="btn-filter">Search</button>
+            <button type="submit" class="btn btn-primary">Search</button>
             <?php if ($search !== '' || $genreId > 0 || $sort !== 'newest'): ?>
-                <a href="games.php" class="btn-filter btn-filter-clear">Clear</a>
+                <a href="games.php" class="btn btn-secondary">Clear</a>
             <?php endif ?>
         </div>
     </form>
@@ -119,7 +109,7 @@ require_once 'header.php'; ?>
 
             <?php for ($i = $start; $i <= $end; $i++): ?>
                 <a href="?<?= buildQuery(['page' => $i]) ?>"
-                   class="page-btn<?= $i === $page ? ' page-btn-active' : '' ?>"><?= $i ?></a>
+                    class="page-btn<?= $i === $page ? ' page-btn-active' : '' ?>"><?= $i ?></a>
             <?php endfor ?>
 
             <?php if ($end < $totalPages): ?>

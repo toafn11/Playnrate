@@ -30,7 +30,7 @@ require_once 'header.php'; ?>
         </div>
     </div>
 
-    <h3>Top Rating Games:</h3>
+    <h3 class="section-title">Top Rating Games:</h3>
     <div class="grid-games">
         <?php foreach ($topGames as $g): ?>
             <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
@@ -50,7 +50,7 @@ require_once 'header.php'; ?>
         <?php endforeach ?>
     </div>
 
-    <h3>Recent Added Games:</h3>
+    <h3 class="section-title">Recent Added Games:</h3>
     <div class="grid-games">
 
         <?php foreach ($recentGames as $g): ?>

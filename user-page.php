@@ -47,15 +47,15 @@ require_once 'header.php';
 
                     <div class="review-card-body">
                         <h3><?= sanitize($rev['game_title']) ?></h3>
-                        <p class="review-text">"<?= sanitize($rev['review_text']) ?>"</p>
+
+                        <p class="review-text">"<?= html_entity_decode($rev['review_text'], ENT_QUOTES) ?>"</p>
 
                         <div class="review-card-footer">
                             <span>Reviewed on <?= date('M d, Y', strtotime($rev['created_at'])) ?></span>
                         </div>
                     </div>
 
-                    <a href="game-detail.php?id=<?= (int)$rev['game_id'] ?>"
-                        style="text-align: center; padding: 10px; background: var(--bg-input); border-top: 1px solid var(--border); font-size: 0.8rem; font-weight: bold;">
+                    <a href="game-detail.php?id=<?= (int)$rev['game_id'] ?>" class="view-game-btn">
                         VIEW GAME PAGE
                     </a>
                 </div>

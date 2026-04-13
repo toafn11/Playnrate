@@ -267,6 +267,20 @@ function getGamePlatform(mysqli $conn, int $id)
     }
     return $platforms;
 }
+function getGamePlatformIDs(mysqli $conn, int $id)
+{
+    $stmt = $conn->prepare("SELECT platform_id FROM game_platforms WHERE game_id = ?");
+    $stmt->bind_param('i', $id);
+    $platform_ids = [];
+
+    if ($stmt->execute()) {
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $platform_ids[] = (int)$row['platform_id'];
+        }
+    }
+    return $platform_ids;
+}
 
 function addGame(mysqli $conn, array $data)
 {
@@ -483,4 +497,15 @@ function getAllGenres(mysqli $conn)
 function getAllPlatforms(mysqli $conn)
 {
     return $conn->query("SELECT * FROM platforms ORDER BY name");
+}
+
+function buildQuery(array $override): string
+{
+    $base = [
+        'search' => $_GET['search'] ?? '',
+        'genre'  => $_GET['genre']  ?? '',
+        'sort'   => $_GET['sort']   ?? 'newest',
+        'page'   => $_GET['page']   ?? 1,
+    ];
+    return http_build_query(array_filter(array_merge($base, $override), fn($v) => $v !== '' && $v !== '0' && $v !== 0));
 }
