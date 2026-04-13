@@ -118,7 +118,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .nav-bar li { padding: .25rem; font-weight: 500; font-size: larger; }
 .nav-link a:hover, .nav-link-active a:hover { color: var(--text); }
 
-.logo-icon { display: block; height: 100px; width: 100px; flex-shrink: 0; background: transparent; background-image: linear-gradient(to left, var(--accent-h), var(--accent)); background-size: cover; -webkit-mask-image: url("images/PNR_logo.png"); mask-image: url("images/PNR_logo.png"); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; transition: all 0.3s ease; }
+.logo-icon { display: block; height: 100px; width: 100px; flex-shrink: 0; background: transparent; background-image: linear-gradient(to left, var(--accent-h), var(--accent)); background-size: cover; -webkit-mask-image: url("../images/PNR_logo.png"); mask-image: url("../images/PNR_logo.png"); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; transition: all 0.3s ease; }
 .logo-icon:hover { background-image: linear-gradient(to left, var(--accent), var(--accent-h)); }
 .logo-text { font-family: var(--font-brand); font-size: 2rem; color: transparent; background: linear-gradient(135deg, var(--accent), var(--primary-light), var(--accent-h)); -webkit-background-clip: text; background-clip: text; white-space: nowrap; }
 
@@ -138,7 +138,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .welcome-section h1 { font-family: var(--font-brand); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: .75rem; }
 .welcome-section p { font-family: var(--font-brand); }
 
-.stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(299px, 1fr)); gap: 1rem; margin-bottom: 3.6rem; }
+.stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(299px, 1fr)); gap: 1rem; margin-bottom: 3.6rem; margin-top: 1rem; }
 .stat-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
 .stat-item h3 { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: .25rem; }
 .stat-item p { font-family: var(--font-brand); color: var(--text-muted); line-height: 1; }

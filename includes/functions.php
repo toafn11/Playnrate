@@ -3,8 +3,9 @@
 /**
  * Sanitise a string from user input.
  */
-function sanitize(string $value): string
+function sanitize(?string $value): string
 {
+    if ($value === null) return '';
     return htmlspecialchars(strip_tags(trim($value)), ENT_QUOTES, 'UTF-8');
 }
 
@@ -38,7 +39,7 @@ function uploadCover(array $file, string &$error): string|false
 {
     $allowed   = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     $maxBytes  = 2 * 1024 * 1024; // 2 MB
-    $uploadDir = __DIR__ . '/uploads/';
+    $uploadDir = __DIR__ . '/../uploads/';
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $error = 'Upload error code: ' . $file['error'];
@@ -68,16 +69,17 @@ function uploadCover(array $file, string &$error): string|false
 
 function coverSrc(?string $filename): string
 {
+    global $baseUrl;
     if (empty($filename)) {
-        return 'images/placeholder.png';
+        return $baseUrl . 'images/placeholder.png';
     }
-    $path = __DIR__ . '/uploads/' . $filename;
+    $path = __DIR__ . '/../uploads/' . $filename;
 
     if (file_exists($path)) {
-        return '/PlayNRate/uploads/' . htmlspecialchars($filename);
+        return $baseUrl . 'uploads/' . htmlspecialchars($filename);
     }
 
-    return 'images/placeholder.png';
+    return $baseUrl . 'images/placeholder.png';
 }
 
 /**
@@ -198,7 +200,7 @@ function addUsers(mysqli $conn, string $username, string $pwd)
 
 function getLogin(mysqli $conn, string $username, string $pwd)
 {
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
 
     $stmt->bind_param("s", $username);
 
@@ -208,7 +210,7 @@ function getLogin(mysqli $conn, string $username, string $pwd)
         if ($row = $result->fetch_assoc()) {
 
             if (password_verify($pwd, $row['password'])) {
-                return (int)$row['id'];
+                return $row;
             } else {
                 return false;
             }
@@ -232,6 +234,7 @@ function checkPasswordMatch(string $password, string $retype_password)
     if ($password !== $retype_password) {
         return "Retype password does not match!";
     }
+    return true;
 }
 
 function getGameDetail(mysqli $conn, int $id)
@@ -287,7 +290,7 @@ function addGame(mysqli $conn, array $data)
     $errors_list = [];
 
     $add = $conn->prepare("INSERT INTO games(title, description, genre_id, release_year, developer, publisher, cover_image)
-                            VAlUES (?,?,?,?,?,?,?)");
+                            VALUES (?,?,?,?,?,?,?)");
     if (!$add) return ["db-error" => $conn->error];
 
     $add->bind_param(
@@ -301,7 +304,10 @@ function addGame(mysqli $conn, array $data)
         $data['cover_image'],
     );
 
-    if (!$add->execute()) $errors_list['game-add'] = "Cannot add game info.";
+    if (!$add->execute()) {
+        $errors_list['game-add'] = "Cannot add game info.";
+        return $errors_list;
+    }
 
     $newid = $add->insert_id;
     if (!empty($data['platforms']) && is_array($data['platforms'])) {
@@ -318,9 +324,12 @@ function addGame(mysqli $conn, array $data)
 
 function delGame(mysqli $conn, array $data)
 {
-    if ($data['cover_image'] && $data['cover_image'] !== 'default-cover.jpg') {
-        $path = __DIR__ . '/uploads/' . $data['cover_image'];
-        if (file_exists($path)) unlink($path);
+    // Delete cover image if it exists and is not the default
+    if (!empty($data['cover_image']) && $data['cover_image'] !== 'default-cover.jpg') {
+        $path = __DIR__ . '/../uploads/' . $data['cover_image'];
+        if (file_exists($path)) {
+            @unlink($path); // Suppress warnings if file can't be deleted
+        }
     }
     $del = $conn->prepare("DELETE FROM games WHERE id = ?");
     $del->bind_param('i', $data['id']);
@@ -347,7 +356,10 @@ function updateGame(mysqli $conn, array $data, int $id)
         $id
     );
 
-    if (!$upd->execute()) $errors_list['game-update'] = "Cannot update game info.";
+    if (!$upd->execute()) {
+        $errors_list['game-update'] = "Cannot update game info.";
+        return $errors_list;
+    }
 
     $del = $conn->prepare("DELETE FROM game_platforms WHERE game_id = ?");
     $del->bind_param('i', $id);
@@ -395,7 +407,7 @@ function checkImgPath(string $currentImg)
 
     if ($uploadedFileName) {
         if ($currentImg !== 'default-cover.jpg') {
-            $oldPath = __DIR__ . '/uploads/' . $currentImg;
+            $oldPath = __DIR__ . '/../uploads/' . $currentImg;
             if (file_exists($oldPath)) @unlink($oldPath);
         }
         return $uploadedFileName;
@@ -508,4 +520,23 @@ function buildQuery(array $override): string
         'page'   => $_GET['page']   ?? 1,
     ];
     return http_build_query(array_filter(array_merge($base, $override), fn($v) => $v !== '' && $v !== '0' && $v !== 0));
+}
+
+function writeLog(mysqli $conn, ?int $user_id, string $action, string $details = '')
+{
+    $stmt = $conn->prepare("INSERT INTO logs (user_id, action, details) VALUES (?, ?, ?)");
+    if (!$stmt) return false;
+    $stmt->bind_param("iss", $user_id, $action, $details);
+    return $stmt->execute();
+}
+
+function checkAdmin(bool $setFlash = true)
+{
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        if ($setFlash) {
+            $_SESSION['flash_error'] = "You do not have permission to access this page!";
+        }
+        return false;
+    }
+    return true;
 }

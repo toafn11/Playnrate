@@ -1,8 +1,7 @@
-<?php require_once 'db-connect.php';
-require_once 'functions.php';
+<?php require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
 $page_title = 'Sign Up';
 $error_message = "";
-$sucess_message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = strtolower($_POST['username']);
     $pwd = $_POST['password'];
@@ -14,10 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['flash_success'] = "Sign up successfully! You can login.";
             redirect("login.php");
         } else $error_message = "Error in adding user.";
-    } else $error_message = "Fail to sign up";
+    } else $error_message = is_string($signup) ? $signup : "Fail to sign up";
 }
 
-require_once 'header.php'; ?>
+require_once '../includes/header.php'; ?>
 <section class="container-login">
     <div>
         <form class="login-site" action="signup.php" method="POST">
@@ -34,9 +33,9 @@ require_once 'header.php'; ?>
             <p>Re-type your password:</p>
             <input type="password" name="retype">
             <button type="submit">Sign up</button>
-            <a href="login.php">I already have an account!</a>
+            <a href="./login.php">I already have an account!</a>
         </form>
     </div>
 </section>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

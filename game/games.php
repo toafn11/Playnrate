@@ -1,6 +1,6 @@
 <?php
-require_once 'db-connect.php';
-require_once 'functions.php';
+require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
 $page_title = 'Games';
 
 $search  = trim($_GET['search'] ?? '');
@@ -8,7 +8,7 @@ $genreId = (int)($_GET['genre'] ?? 0);
 $sort    = in_array($_GET['sort'] ?? '', ['newest', 'oldest', 'top_rated', 'most_reviews', 'a_z', 'z_a'])
     ? $_GET['sort'] : 'newest';
 $page    = max(1, (int)($_GET['page'] ?? 1));
-$perPage = 18;
+$perPage = 10;
 
 $result     = getFilteredGames($conn, $search, $genreId, $sort, $perPage, $page);
 $games      = $result['games'];
@@ -20,7 +20,7 @@ $genres = getAllGenres($conn);
 
 
 
-require_once 'header.php'; ?>
+require_once '../includes/header.php'; ?>
 
 <div class="welcome-section">
     <div class="container">
@@ -70,7 +70,7 @@ require_once 'header.php'; ?>
     <?php if ($games): ?>
         <div class="grid-games">
             <?php foreach ($games as $g): ?>
-                <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
+                <a href="./game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
                     <img src="<?= coverSrc($g['cover_image']) ?>" alt="<?= sanitize($g['title']) ?>">
                     <div class="card-title">
                         <p><?= sanitize($g['title']) ?></p>
@@ -124,4 +124,4 @@ require_once 'header.php'; ?>
     <?php endif ?>
 </section>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

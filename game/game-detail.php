@@ -1,6 +1,6 @@
 <?php
-require_once 'db-connect.php';
-require_once 'functions.php';
+require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) redirect('index.html');
@@ -13,6 +13,7 @@ $platforms = getGamePlatform($conn, $id);
 if (isset($_SESSION['userid'])) $rvcheck = checkUserReviewed($conn, $_SESSION['userid'], $id);
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['submit_review']) && empty($rvcheck)) {
+    $errors = [];
     $score = (int)($_POST['score'] ?? 0);
     $text = sanitize($_POST['review_text'] ?? '');
     if ($score < 1 || $score > 10) $errors[] = 'Score must be between 1 and 10.';
@@ -29,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['submit_review']) && e
 
 $reviews = getReview($conn, $id);
 $pageTitle = $game['title'];
-require_once 'header.php';
+require_once '../includes/header.php';
 ?>
 
 <section class="container detail-layout">
@@ -61,10 +62,12 @@ require_once 'header.php';
             <?php endforeach ?>
         </div>
 
-        <div class="admin-actions">
-            <a href="game-edit.php?id=<?= $id ?>" class="btn btn-secondary btn-sm">✏️ Edit</a>
-            <a href="game-delete.php?id=<?= $id ?>" class="btn btn-danger btn-sm">🗑️ Delete</a>
-        </div>
+        <?php if (checkAdmin(false) === true):  ?>
+            <div class="admin-actions">
+                <a href="./game-edit.php?id=<?= $id ?>" class="btn btn-secondary btn-sm">✏️ Edit</a>
+                <a href="./game-delete.php?id=<?= $id ?>" class="btn btn-danger btn-sm">🗑️ Delete</a>
+            </div>
+        <?php endif ?>
     </div>
 
     <div class="detail-right">
@@ -92,7 +95,7 @@ require_once 'header.php';
             </form>
         <?php else : ?>
             <div class="write-review-box" style="text-align: center;">
-                <p style="font-size: 1.1rem;">You must <a href="login.php" style="color: var(--accent); font-weight: bold;">Login</a> to write a review!</p>
+                <p style="font-size: 1.1rem;">You must <a href="../session/login.php" style="color: var(--accent); font-weight: bold;">Login</a> to write a review!</p>
             </div>
         <?php endif ?>
 
@@ -122,4 +125,4 @@ require_once 'header.php';
     </div>
 </section>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

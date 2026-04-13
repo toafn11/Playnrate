@@ -1,5 +1,5 @@
-<?php require_once 'db-connect.php';
-require_once 'functions.php';
+<?php require_once 'includes/db-connect.php';
+require_once 'includes/functions.php';
 $page_title = 'Home';
 
 $topGames = getTopGames($conn, 8);
@@ -7,7 +7,7 @@ $recentGames = getRecentGames($conn, 4);
 
 $stat = getStat($conn);
 
-require_once 'header.php'; ?>
+require_once 'includes/header.php'; ?>
 <div class="welcome-section">
     <div class="container">
         <h1>Discover the Whole World of Games</h1>
@@ -33,8 +33,8 @@ require_once 'header.php'; ?>
     <h3 class="section-title">Top Rating Games:</h3>
     <div class="grid-games">
         <?php foreach ($topGames as $g): ?>
-            <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
-                <img src="<?= coverSrc($g['cover_image']) ?>" alt=" <?= sanitize($g['title']) ?>">
+            <a href="<?= $baseUrl ?>game/game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
+                <img src="<?= coverSrc($g['cover_image']) ?>" alt="<?= sanitize($g['title']) ?>">
                 <div class="card-title">
                     <p><?= sanitize($g['title']) ?></p>
                     <div class="card-info">
@@ -54,8 +54,8 @@ require_once 'header.php'; ?>
     <div class="grid-games">
 
         <?php foreach ($recentGames as $g): ?>
-            <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
-                <img src="<?= coverSrc($g['cover_image']) ?>" alt=" <?= sanitize($g['title']) ?>">
+            <a href="<?= $baseUrl ?>game/game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
+                <img src="<?= coverSrc($g['cover_image']) ?>" alt="<?= sanitize($g['title']) ?>">
                 <div class="card-title">
                     <p><?= sanitize($g['title']) ?></p>
                     <div class="card-info">
@@ -73,4 +73,4 @@ require_once 'header.php'; ?>
 </section>
 
 
-<?php require_once 'footer.php'; ?>
+<?php require_once 'includes/footer.php'; ?>
