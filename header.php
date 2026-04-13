@@ -27,7 +27,7 @@
                         <div class="nav-link<?= $currentPage === 'games' ? '-active' : '' ?>"><a href="games.php">Games</a></div>
                     </li>
                     <li>
-                        <div class="nav-link<?= $currentPage === 'gane-add' ? '-active' : '' ?>"><a href="game-add.php">Add Game</a></div>
+                        <div class="nav-link<?= $currentPage === 'game-add' ? '-active' : '' ?>"><a href="game-add.php">Add Game</a></div>
                     </li>
                     <li>
                         <?php if (isset($_SESSION['userid'])): ?>

@@ -1,4 +1,8 @@
+/* =========================================
+   1. RESET & VARIABLES
+   ========================================= */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
     --bg:          #0d0f14;
     --bg-card:     #161b26;
@@ -20,6 +24,8 @@
     --transition:  .2s ease;
     --font:        'Inter', system-ui, sans-serif;
     --font-brand:  'Orbitron', sans-serif;
+    
+    /* Hệ màu HSL */
     --score-1:  hsl(0, 85%, 45%);    
     --score-2:  hsl(13, 90%, 45%);   
     --score-3:  hsl(26, 95%, 45%);   
@@ -33,700 +39,224 @@
 }
 
 html { scroll-behavior: smooth; }
-
-body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
-}
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
 a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--accent-h); }
-
 img { max-width: 100%; display: block; }
-
 ul { list-style: none; }
+.container { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 0.5rem; }
 
+/* =========================================
+   2. GLOBAL COMPONENTS 
+   ========================================= */
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
+    width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); padding: .65rem .85rem;
+    font-size: .9rem; outline: none; font-family: var(--font); transition: border-color var(--transition);
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 
-.container { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline:0.5rem; }
+/* Khôi phục form chữ to cho trang Login */
+.login-site input { margin-bottom: 15px; font-weight: bolder; font-size: large; padding: 10px; }
 
-.main-site
- { flex: 1; padding-block: 20%; }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-weight: bold; }
 
-.header-site
-{
-    background: black;
-    box-shadow: var(--shadow);
-    border-bottom: #2a3147 1px solid   ;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.header-inside {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 50px;
-    gap: 0.5rem;
-    padding:0 15%;
-}
-.nav-bar {
-    font-family: var(--font-brand);
-    font-size: 0.75rem;
-    background-color: var(--bg-card) ;
-    border-radius: var(--radius);
-}
-.nav-bar ul{
-    display: flex;
-    align-items: center;
-    gap: .1rem;
-}
-
-.nav-bar a {
-    padding: .5rem .5rem;
-    color: var(--text-muted);
-}
-.nav-link {
-    background-color: transparent;
-    padding: auto;
-    border-radius: var(--radius);
-}
-
-.nav-link:hover {
-    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
-}
-
-.nav-link-active {
-    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
-    padding: auto;
-    border-radius: var(--radius);
-}
-
-.nav-bar li {
-    padding: .25rem .25rem;
-    border-radius: var(--radius);
-    font-weight: 500;
-    font-size: larger;
-}
-
-.nav-link a:hover, .nav-link a:focus, .nav-link-active a:hover {
-    color: var(--text);
-}
-.logo-icon {
-    display: block;
-     
-    height: 100px; 
-    width: 100px;      
-    flex-shrink: 0;   
-    background: transparent;
-    background-image: linear-gradient(to left, var(--accent-h), var(--accent));
-    background-size: cover; 
-    
-    -webkit-mask-image: url("images/PNR_logo.png");
-    mask-image: url("images/PNR_logo.png");
-    
-    -webkit-mask-size: contain; 
-    mask-size: contain;
-    
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-
-    transition: all 0.3s ease;
-}
-
-.logo-icon:hover {
-    background-color: transparent;
-    background-image: linear-gradient(to left, var(--accent), var(--accent-h));
-}
-
-.logo-text {
-    font-family: var(--font-brand);
-    font-size: 2rem;
-    color: transparent;
-    background: linear-gradient(135deg, var(--accent), var(--primary-light), var(--accent-h));
-    -webkit-background-clip: text;
-    background-clip: text;
-    white-space: nowrap;
-}
-
-.logo-text:hover {
-    background: linear-gradient(135deg, var(--accent-h), var(--primary-light), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    white-space: nowrap;
-}
+/* --- NÚT BẤM (KHÔI PHỤC HIỆU ỨNG GLOW) --- */
 .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    padding: .55rem 1.2rem;
-    border-radius: var(--radius);
-    font-size: .9rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all var(--transition);
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.2rem;
+    border-radius: var(--radius); font-size: .9rem; font-weight: 600; cursor: pointer;
+    border: none; transition: all var(--transition); white-space: nowrap; font-family: var(--font);
 }
 
-.btn-primary  { background: var(--accent);  color: #fff; }
-.btn-primary:hover  { background: var(--accent-h); color: #fff; transform: translateY(-1px); }
+.btn-primary { 
+    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); 
+    color: #fff; 
+}
+.btn-primary:hover { 
+    background: linear-gradient(36deg, var(--accent-h) 6%, var(--accent)); 
+    box-shadow: 0 0 10px #3b82f6, 0 0 20px #8b5cf6, 0 0 30px #ec4899; 
+    color: #fff;
+}
 
 .btn-secondary { background: var(--bg-input); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-.btn-danger   { background: var(--danger); color: #fff; }
-.btn-danger:hover   { background: #c0392b; color: #fff; }
-
-.btn-success  { background: var(--success); color: #fff; }
-.btn-success:hover  { background: #219a52; color: #fff; }
-
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #c0392b; color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
 .btn-sm { padding: .35rem .75rem; font-size: .8rem; }
 
-.footer-site {
-    background: black;
-    text-align: center;
-    padding: 0 0;
-    margin-top: auto;
-    color: var(--text-muted);
-    position: bottom;
+.rating-badge {
+    display: inline-flex; align-items: center; gap: .3rem; background: var(--bg-input);
+    border: 1px solid var(--border); border-radius: 6px; padding: .2rem .5rem;
+    font-size: .82rem; font-weight: 700; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
+/* =========================================
+   3. TYPOGRAPHY (TITLES)
+   ========================================= */
+.section-title {
+    font-family: var(--font-brand); font-size: 1.6rem; color: #fff; margin-bottom: 1.5rem; margin-top: 1.5rem;
+    padding-left: 12px; border-left: 4px solid var(--accent); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;
+}
+.section-title::after { content: ""; flex-grow: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); margin-left: 15px; }
 
+/* =========================================
+   4. HEADER & FOOTER
+   ========================================= */
+.header-site { background: black; box-shadow: var(--shadow); border-bottom: #2a3147 1px solid; position: sticky; top: 0; z-index: 100; }
+.header-inside { display: flex; justify-content: space-between; align-items: center; height: 50px; gap: 0.5rem; padding: 0 15%; }
+.nav-bar { font-family: var(--font-brand); font-size: 0.75rem; background-color: var(--bg-card); border-radius: var(--radius); }
+.nav-bar ul { display: flex; align-items: center; gap: .1rem; }
+.nav-bar a { padding: .5rem .5rem; color: var(--text-muted); }
 
-.main-section { flex: 1; padding-block: 0 2rem; }
+/* Khôi phục hiệu ứng hover nav-link */
+.nav-link { background-color: transparent; border-radius: var(--radius); }
+.nav-link:hover { background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); }
+.nav-link-active { background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); border-radius: var(--radius); }
+.nav-bar li { padding: .25rem; font-weight: 500; font-size: larger; }
+.nav-link a:hover, .nav-link-active a:hover { color: var(--text); }
 
-.welcome-section {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-    position: relative;
-    text-align: center;
-    padding: 4rem 0 3rem;
-    width: 100%;
-    background: radial-gradient(circle, var(--primary), black);
-}
+.logo-icon { display: block; height: 100px; width: 100px; flex-shrink: 0; background: transparent; background-image: linear-gradient(to left, var(--accent-h), var(--accent)); background-size: cover; -webkit-mask-image: url("images/PNR_logo.png"); mask-image: url("images/PNR_logo.png"); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; transition: all 0.3s ease; }
+.logo-icon:hover { background-image: linear-gradient(to left, var(--accent), var(--accent-h)); }
+.logo-text { font-family: var(--font-brand); font-size: 2rem; color: transparent; background: linear-gradient(135deg, var(--accent), var(--primary-light), var(--accent-h)); -webkit-background-clip: text; background-clip: text; white-space: nowrap; }
 
-.welcome-section h1 {
-    font-family: var(--font-brand);
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 900;
-    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: .75rem;
-}
+.footer { background: #171a21; color: #c7d5e0; padding: 40px 0; margin-top: auto; font-size: 14px; }
+.footer-container { font-family: var(--font-brand); width: 80%; margin: auto; }
+.footer-top { border-bottom: 1px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; text-align: center; color: #8f98a0; }
+.footer-links { display: flex; justify-content: space-between; flex-wrap: wrap; }
+.footer-links div { display: flex; flex-direction: column; gap: 8px; }
+.footer-links h4 { color: var(--primary-light); margin-bottom: 10px; }
+.footer-links a { color: #c7d5e0; transition: 0.3s; }
+.footer-links a:hover { color: #66c0f4; }
 
-.welcome-section p {
-    font-family: var(--font-brand);
-}
+/* =========================================
+   5. WELCOME & STATS 
+   ========================================= */
+.welcome-section { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); position: relative; text-align: center; padding: 4rem 0 3rem; background: radial-gradient(circle, var(--primary), black); }
+.welcome-section h1 { font-family: var(--font-brand); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: .75rem; }
+.welcome-section p { font-family: var(--font-brand); }
 
-.stats-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(299px, 16fr));
-    gap: 1rem;
-    margin-bottom: 3.6rem;
-}
-.stat-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    text-align: center;
-}
-.stat-item h3 {
-     font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: .25rem; 
-}
-.stat-item p {
-     font-family: var(--font-brand); color: var(--text-muted); line-height: 1; margin-bottom: .25rem; 
-}
+.stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(299px, 1fr)); gap: 1rem; margin-bottom: 3.6rem; }
+.stat-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
+.stat-item h3 { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: .25rem; }
+.stat-item p { font-family: var(--font-brand); color: var(--text-muted); line-height: 1; }
+
+/* =========================================
+   6. GRID GAMES & CARDS
+   ========================================= */
+.grid-games, .my-reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+
 .game-card {
-    overflow: hidden;
-    border-radius: var(--radius);
-    display:flex;
-    flex-direction: column;
-    text-decoration:none;
-    border: 1px solid var(--primary);
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-card);
+    overflow: hidden; border-radius: var(--radius); display: flex; flex-direction: column;
+    text-decoration: none; border: 1px solid var(--primary); width: 100%; height: 100%; background-color: var(--bg-card);
+    transition: var(--transition);
 }
+
 
 .game-card:hover {
     transform: translateY(-4px);
-    border: linear-gradient(36deg, var(--accent-h) 6%, var(--accent));
+    
+    /* Tuyệt chiêu lót nền tạo viền Gradient */
+    border: 1px solid transparent;
+    background: 
+        linear-gradient(var(--bg-card), var(--bg-card)) padding-box, 
+        linear-gradient(65deg, var(--accent-h), var(--accent)) border-box; 
     box-shadow: 
-        0 0 30px var(--accent);
-}
-.game-card img {
-    width: 100%;
-    aspect-ratio: 3/4; 
-    object-fit: cover; 
-    display: block;
+        -10px 10px 25px rgba(255, 0, 128, 0.5),  
+         10px -10px 25px rgba(0, 112, 243, 0.5); 
 }
 
-.grid-games {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
+.game-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+.card-title { padding: .5rem; width: 100%; display: flex; flex-direction: column; flex-grow: 1; }
+.card-title p { color: white; font-weight: bold; line-height: 1.5; height: 3em; }
+.card-main { padding: .5rem 1rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.genres-box { display: inline-flex; background-color: var(--primary); border: 1px solid var(--primary-light); border-radius: var(--radius-lg); padding: 0.2rem 0.5rem; color: var(--accent-h); font-size: small; justify-content: center; font-weight: bolder; width: max-content; }
+.release-box { color: var(--accent); font-size: smaller; }
+.card-info { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: auto; padding-top: 1rem; }
 
-/* ── Filter bar ── */
-.filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .75rem;
-    align-items: center;
-    margin: 1.5rem 0 .75rem;
-}
-.filter-search {
-    flex: 1 1 220px;
-}
-.filter-search input {
-    width: 100%;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    padding: .5rem .85rem;
-    font-size: .9rem;
-    outline: none;
-    transition: border-color var(--transition);
-}
-.filter-search input:focus { border-color: var(--accent); }
-.filter-selects {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .75rem;
-    align-items: center;
-}
-.filter-selects select {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    padding: .5rem .75rem;
-    font-size: .9rem;
-    cursor: pointer;
-    outline: none;
-    transition: border-color var(--transition);
-}
-.filter-selects select:focus { border-color: var(--accent); }
-.btn-filter {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    padding: .5rem 1.1rem;
-    font-size: .9rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity var(--transition);
-}
-.btn-filter:hover { opacity: .85; color: #fff; }
-.btn-filter-clear {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-}
-.btn-filter-clear:hover { border-color: var(--accent); color: var(--text); }
-.filter-info {
-    margin-bottom: 1rem;
-    font-size: .85rem;
-}
+/* =========================================
+   7. TRANG FILTER (Games.php)
+   ========================================= */
+.filter-bar { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; align-items: center; margin: 1.5rem 0; }
+.filter-search { flex: 2; }
+.filter-selects { flex: 3; display: flex; gap: 10px; }
+.btn-filter-clear { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted); }
 
-/* ── Pagination ── */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: .4rem;
-    flex-wrap: wrap;
-    margin: 1.5rem 0 2rem;
-}
-.page-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.2rem;
-    height: 2.2rem;
-    padding: 0 .5rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--bg-input);
-    color: var(--text);
-    font-size: .88rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: border-color var(--transition), background var(--transition);
-}
+.pagination { display: flex; justify-content: center; align-items: center; gap: .4rem; flex-wrap: wrap; margin: 1.5rem 0 2rem; }
+.page-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 2.2rem; height: 2.2rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: .88rem; font-weight: 500; transition: all var(--transition); }
 .page-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--bg-card); }
 .page-btn-active { background: var(--accent); border-color: var(--accent); color: #fff !important; }
-.page-dots { color: var(--text-muted); padding: 0 .25rem; }
 
-/* ── No results ── */
-.no-results {
-    text-align: center;
-    padding: 4rem 1rem;
-    color: var(--text-muted);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+/* =========================================
+   8. GAME DETAIL (Split Layout)
+   ========================================= */
+.detail-layout { display: grid; grid-template-columns: 4fr 5fr; gap: 40px; margin-top: 2rem; margin-bottom: 4rem; align-items: start; }
+.detail-left { background: var(--bg-card); padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 15px; position: sticky; top: 80px; box-shadow: var(--shadow); }
+.detail-cover { width: 100%; max-height: 450px; object-fit: cover; border-radius: var(--radius); border: 2px solid var(--primary-light); }
+.gi-title { font-size: 28px; font-weight: bold; margin-bottom: 5px; color: #ffffff; line-height: 1.2; }
+.gi-des { font-size: 14px; color: #acb2b8; line-height: 1.6; }
+.gi-meta p { font-size: 13px; margin-bottom: 6px; }
+.gi-platform { display: inline-block; background: #2a475e; padding: 5px 10px; margin: 5px 5px 0 0; border-radius: 5px; font-size: 12px; transition: var(--transition); }
+.gi-platform:hover { background: var(--accent); color: #000; cursor: pointer; }
+.admin-actions { margin-top: 10px; padding-top: 15px; border-top: 1px dashed var(--border); display: flex; gap: 10px; justify-content: flex-start; }
+
+.detail-right { display: flex; flex-direction: column; gap: 30px; }
+.write-review-box { width: 100%; background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.reviews-list { display: flex; flex-direction: column; gap: 15px; }
+.review-card { background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius-lg); transition: var(--transition); }
+.review-card:hover { transform: translateY(-3px); border-color: var(--primary-light); }
+
+@media (max-width: 900px) { .detail-layout { grid-template-columns: 1fr; } .detail-left { position: static; } .filter-bar { flex-wrap: wrap; } }
+
+/* =========================================
+   9. GAME ADD / EDIT (Gọn gàng)
+   ========================================= */
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; width: 100%; }
+
+.file-upload-label {
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    border: 2px dashed var(--border); border-radius: var(--radius); cursor: pointer;
+    transition: var(--transition); background: var(--bg-input); overflow: hidden; position: relative;
 }
+.upload-preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
 
-.card-title {
-    padding: .5rem 0.5rem;;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+/* =========================================
+   10. LOGIN / SIGNUP (Giữ y nguyên phong cách Login)
+   ========================================= */
+.container-login { font-family: var(--font-brand); display: flex; justify-content: center; align-items: center; height: 80vh; }
+.login-site { background: var(--primary); padding: 40px; border-radius: 20px; width: 500px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+.login-site h1 { text-align: center; color: #fff; margin-bottom: 20px;}
+.login-site button { width: 100%; padding: 10px; background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: var(--font-brand); transition: var(--transition);}
+.login-site button:hover { background: linear-gradient(36deg, var(--accent-h) 6%, var(--accent)); box-shadow: 0 0 10px #3b82f6, 0 0 20px #8b5cf6, 0 0 30px #ec4899; }
+.login-site a { display: block; text-align: center; margin-top: 10px; color: #3b82f6; }
 
-.card-title p {
-    color: white;
+/* =========================================
+   11. ADMIN & USER PAGES
+   ========================================= */
+.danger-zone { text-align: center; padding: 2rem; border: 1px dashed var(--danger); background: rgba(231, 76, 60, 0.05); border-radius: var(--radius-lg); }
+.user-hero { display: flex; justify-content: space-between; align-items: center; padding: 2rem; background: linear-gradient(to right, var(--primary), transparent); border-radius: var(--radius-lg); border-left: 5px solid var(--accent); margin-bottom: 2rem; }
+.user-hero h2 { font-family: var(--font-brand); font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; }
+.user-review-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; transition: var(--transition); }
+.user-review-card:hover { 
+    transform: translateY(-5px); 
     
-    font-weight: bold;
-    line-height: 1.5;     /* Định nghĩa độ cao của 1 dòng (ví dụ 1.5, hoặc 24px) */
-    height: 3em; 
-}
-.card-main {
-    padding: .2rem 1rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .5rem;
-}
-
-.rating-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: .3rem;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: .2rem .5rem;
-    font-size: .82rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-.rating-badge .icon { font-size: .9rem; }
-
-.stars { color: var(--gold); letter-spacing: 1px; font-size: 1rem; }
-.star.empty { color: var(--border); }
-.text-muted {color: var(--text); font-size: 0.75rem;}
-
-.genres-box {
-    width: max-content; 
-    height: fit-content;
-    display: inline-flex;
-    background-color: var(--primary);
-    border-radius: var(--radius-lg);
-    border-style: solid;
-    border-width: 1px 1px;
-    padding: 0.2rem 0.5rem;
-    border-color: var(--primary-light);
-    color: var(--accent-h);
-    font-size: small;
-    justify-content: center;
-    font-weight: bolder;
-}
-
-.release-box {
-    font-color: var(--accent);
-    font-size: smaller;
-}
-
-.card-info{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-top: auto;
-    padding-top: 1rem;
-}
-
-.container-login {
-    font-family: var(--font-brand);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh; 
-}
-
-.login-site {
-    background: var(--primary); 
-    padding: 40px;
-    border-radius: 20px;
-    width: 500px; 
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-.login-site h1 {
-    text-align: center;
-}
-
-.login-site input {
-    width: 100%;
-    padding: 10px;
-    background: var(--bg-input);
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: none;
-    color: white;
-    font-weight: bolder;
-    font-size: large;
-}
-
-.login-site button {
-    width: 100%;
-    padding: 10px;
-    background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h));
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: var(--font-brand);
-}
-
-.login-site button:hover {
-    background: linear-gradient(36deg, var(--accent-h) 6%, var(--accent));
+    border: 1px solid transparent;
+    background: 
+        linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+        linear-gradient(135deg, var(--accent-h), var(--accent)) border-box;
+        
     box-shadow: 
-        0 0 10px #3b82f6,
-        0 0 20px #8b5cf6,
-        0 0 30px #ec4899;
-}
-
-.login-site a {
-    
-}
-
-.container a {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    color: #3b82f6;
-}
-
-.footer {
-    background: #171a21;
-    color: #c7d5e0;
-    padding: 40px 0;
-    margin-top: 50px;
-    font-size: 14px;
-}
-
-.footer-container {
-    font-family: var(--font-brand);
-    width: 80%;
-    margin: auto;
-}
-
-/* phần trên */
-.footer-top {
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #8f98a0;
-}
-
-/* chia cột */
-.footer-links {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.footer-links div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.footer-links h4 {
-    color: var(--primary-light);
-    margin-bottom: 10px;
-}
-
-/* link */
-.footer-links a {
-    color: #c7d5e0;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.footer-links a:hover {
-    color: #66c0f4;
-}
-
-.container-detail {
-    font-family: var(--font-brand);
-    width: 90%;
-    margin: auto;
-    color: #c7d5e0;
-}
-
-.game-intro {
-    position: relative;
-    display: flex;
-    gap: 30px;
-    padding: 20px;
-    border-radius: 10px;
-    align-items: flex-start;
-}
-.game-intro::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw; 
-    height: 100%; 
-    
-    background: radial-gradient(circle, var(--primary), black);
-    
-    z-index: -1; 
-}
-.game-intro img {
-    width: auto;
-    height: 400PX;
-    border: 2px solid var(--primary-light);
-    border-radius: 5px;
-    object-fit: cover;
-}
-
-.game-intro > div:not(img) {
-    width: 35%;
-}
-
-.gi-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #ffffff;
-}
-
-.gi-des {
-    font-size: 14px;
-    color: #acb2b8;
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-.gi-year,
-.gi-genre,
-.gi-developer,
-.gi-pub {
-    font-size: 13px;
-    margin-bottom: 6px;
-}
-
-.review-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: .75rem 1.25rem;
-    margin-bottom: 1.25rem;
-    width: fit-content;
-}
-.gi-avgrating {
-    color: var(--gold);
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.gi-ratingcount {
-    font-size: 12px;
-    color: #8f98a0;
-    margin-bottom: 10px;
-}
-
-.gi-platform {
-    display: inline-block;
-    background: #2a475e;
-    padding: 5px 10px;
-    margin: 5px 5px 0 0;
-    border-radius: 5px;
-    font-size: 12px;
-}
-
-.gi-platform:hover {
-    background: var(--accent);
-    color: #000;
-    cursor: pointer;
-}
-
-.write-review-box {
-    width: 360px; 
-    flex-shrink: 0;
-    position: left;
-    background: rgba(255, 255, 255, 0.05); 
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.user-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem;
-    background: linear-gradient(to right, var(--primary), transparent);
-    border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
-    border-left: 5px solid var(--accent);
-}
-
-.user-hero h2 {
-    font-family: var(--font-brand);
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-/* Lưới chứa các bài review */
-.my-reviews-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-/* Thẻ review tổng hợp */
-.user-review-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-}
-
-.user-review-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
-    border-color: var(--accent);
+        -10px 10px 25px rgba(255, 0, 128, 0.2), 
+         10px -10px 25px rgba(0, 112, 243, 0.2); 
 }
 
 .review-card-header {
     position: relative;
-    height: 180px;
+    width: 100%;
+    height: 180px; 
+    overflow: hidden;
 }
 
 .review-card-header img {
@@ -735,42 +265,60 @@ ul { list-style: none; }
     object-fit: cover;
 }
 
-/* Badge điểm số nằm đè lên ảnh */
 .user-score-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 5px 12px;
+    bottom: 10px; 
+    left: 10px;
+    padding: 4px 10px;
     border-radius: 6px;
-    font-weight: 800;
+    font-weight: 900;
+    font-size: 0.9rem;
     color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    z-index: 10;
 }
 
 .review-card-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .review-card-body h3 {
-    font-size: 1.1rem;
     margin-bottom: 0.5rem;
-    color: var(--text);
+    color: #fff;
+    font-size: 1.1rem;
 }
 
-.review-card-body .review-text {
+.review-text {
+    color: var(--text);
     font-style: italic;
-    color: var(--text-muted);
     font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
+    margin-bottom: 1rem;
+    flex-grow: 1; 
+    opacity: 0.9;
 }
 
 .review-card-footer {
     font-size: 0.8rem;
     color: var(--text-muted);
+}
+
+.view-game-btn {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
     border-top: 1px solid var(--border);
-    padding-top: 10px;
+    color: var(--text-muted);
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: var(--transition);
+}
+
+.view-game-btn:hover {
+    background: linear-gradient(65deg, var(--accent) 0%, var(--accent-h) 100%);
+    color: #fff;
 }
