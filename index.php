@@ -2,8 +2,8 @@
 require_once 'includes/functions.php';
 $page_title = 'Home';
 
-$topGames = getTopGames($conn, 8);
-$recentGames = getRecentGames($conn, 4);
+$topGames = getTopGames($conn, 10);
+$recentGames = getRecentGames($conn, 10);
 
 $stat = getStat($conn);
 
@@ -30,7 +30,10 @@ require_once 'includes/header.php'; ?>
         </div>
     </div>
 
-    <h3 class="section-title">Top Rating Games:</h3>
+    <div class="section-header">
+        <h3 class="section-title">Top Rating Games:</h3>
+        <a href="game/games.php?sort=top_rated" class="see-all-btn">See All &rarr;</a>
+    </div>
     <div class="grid-games">
         <?php foreach ($topGames as $g): ?>
             <a href="<?= $baseUrl ?>game/game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
@@ -50,9 +53,11 @@ require_once 'includes/header.php'; ?>
         <?php endforeach ?>
     </div>
 
-    <h3 class="section-title">Recent Added Games:</h3>
+    <div class="section-header">
+        <h3 class="section-title">Recent Added Games:</h3>
+        <a href="game/games.php?sort=newest" class="see-all-btn">See All &rarr;</a>
+    </div>
     <div class="grid-games">
-
         <?php foreach ($recentGames as $g): ?>
             <a href="<?= $baseUrl ?>game/game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
                 <img src="<?= coverSrc($g['cover_image']) ?>" alt="<?= sanitize($g['title']) ?>">

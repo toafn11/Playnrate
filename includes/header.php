@@ -31,7 +31,7 @@ $baseUrl = $depth === 0 ? './' : str_repeat('../', $depth);
                     <li>
                         <div class="nav-link<?= $currentPage === 'games' ? '-active' : '' ?>"><a href="<?= $baseUrl ?>game/games.php">Games</a></div>
                     </li>
-                    <?php if (checkAdmin(false) === true): ?>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                         <li>
                             <div class="nav-link<?= $currentPage === 'game-add' ? '-active' : '' ?>"><a href="<?= $baseUrl ?>game/game-add.php">Add Game</a></div>
                         </li>
