@@ -1,20 +1,21 @@
-<?php require_once 'db-connect.php';
-require_once 'functions.php';
+<?php require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
 $page_title = 'Login';
 $error_message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = getLogin($conn, sanitize($_POST['username']), sanitize($_POST['password']));
-    if ($user_id != false) {
+    $user = getLogin($conn, sanitize($_POST['username']), $_POST['password']);
+    if ($user != false) {
         session_regenerate_id(true);
-        $_SESSION['userid'] = $user_id;
+        $_SESSION['userid'] = $user['id'];
         $_SESSION['username'] = strtolower($_POST['username']);
+        $_SESSION['role'] = sanitize($user['role']);
         $_SESSION['flash_success'] = "Login successfully!";
-        redirect("index.php");
+        redirect("../index.php");
         exit;
     } else $error_message = "Username or password is incorrect!";
 }
 
-require_once 'header.php'; ?>
+require_once '../includes/header.php'; ?>
 <section class="container-login">
     <div>
         <form class="login-site" action="login.php" method="POST">
@@ -32,14 +33,14 @@ require_once 'header.php'; ?>
                 </div>
             <?php endif; ?>
             <h1>Login</h1>
-            <p1>Enter your username:</p>
-                <input class="input-text" type="text" name="username">
-                <p2>Enter your password:</p>
-                    <input class type="password" name="password">
-                    <button type="submit">Login</button>
-                    <a href="signup.php">I don't have any account.</a>
+            <p>Enter your username:</p>
+            <input class="input-text" type="text" name="username">
+            <p>Enter your password:</p>
+            <input class="input-text" type="password" name="password">
+            <button type="submit">Login</button>
+            <a href="./signup.php">I don't have any account.</a>
         </form>
     </div>
 </section>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

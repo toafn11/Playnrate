@@ -14,3 +14,9 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset('utf8mb4');
+
+// Determine base path for assets (how many levels deep we are)
+$projectRoot = str_replace('\\', '/', realpath(dirname(__DIR__)));
+$currentScriptDir = str_replace('\\', '/', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
+$depth = max(0, substr_count($currentScriptDir, '/') - substr_count($projectRoot, '/'));
+$baseUrl = $depth === 0 ? './' : str_repeat('../', $depth);

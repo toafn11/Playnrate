@@ -118,16 +118,16 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .nav-bar li { padding: .25rem; font-weight: 500; font-size: larger; }
 .nav-link a:hover, .nav-link-active a:hover { color: var(--text); }
 
-.logo-icon { display: block; height: 100px; width: 100px; flex-shrink: 0; background: transparent; background-image: linear-gradient(to left, var(--accent-h), var(--accent)); background-size: cover; -webkit-mask-image: url("images/PNR_logo.png"); mask-image: url("images/PNR_logo.png"); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; transition: all 0.3s ease; }
+.logo-icon { display: block; height: 100px; width: 100px; flex-shrink: 0; background: transparent; background-image: linear-gradient(to left, var(--accent-h), var(--accent)); background-size: cover; -webkit-mask-image: url("../images/PNR_logo.png"); mask-image: url("../images/PNR_logo.png"); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; transition: all 0.3s ease; }
 .logo-icon:hover { background-image: linear-gradient(to left, var(--accent), var(--accent-h)); }
 .logo-text { font-family: var(--font-brand); font-size: 2rem; color: transparent; background: linear-gradient(135deg, var(--accent), var(--primary-light), var(--accent-h)); -webkit-background-clip: text; background-clip: text; white-space: nowrap; }
 
 .footer { background: #171a21; color: #c7d5e0; padding: 40px 0; margin-top: auto; font-size: 14px; }
 .footer-container { font-family: var(--font-brand); width: 80%; margin: auto; }
 .footer-top { border-bottom: 1px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; text-align: center; color: #8f98a0; }
-.footer-links { display: flex; justify-content: space-between; flex-wrap: wrap; }
-.footer-links div { display: flex; flex-direction: column; gap: 8px; }
-.footer-links h4 { color: var(--primary-light); margin-bottom: 10px; }
+.footer-links { display: flex; justify-content: center; flex-wrap: wrap; }
+.footer-links div { display: flex; flex-direction: row; gap: 2vw; }
+.footer-links h4 { color: var(--accent-h); margin-bottom: 10px; }
 .footer-links a { color: #c7d5e0; transition: 0.3s; }
 .footer-links a:hover { color: #66c0f4; }
 
@@ -138,7 +138,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .welcome-section h1 { font-family: var(--font-brand); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; background: linear-gradient(36deg, var(--accent) 6%, var(--accent-h)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: .75rem; }
 .welcome-section p { font-family: var(--font-brand); }
 
-.stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(299px, 1fr)); gap: 1rem; margin-bottom: 3.6rem; }
+.stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(299px, 1fr)); gap: 1rem; margin-bottom: 3.6rem; margin-top: 1rem; }
 .stat-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
 .stat-item h3 { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: .25rem; }
 .stat-item p { font-family: var(--font-brand); color: var(--text-muted); line-height: 1; }
@@ -321,4 +321,96 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .view-game-btn:hover {
     background: linear-gradient(65deg, var(--accent) 0%, var(--accent-h) 100%);
     color: #fff;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between; /* Đẩy chữ và nút ra 2 góc */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin: 4rem 0 1.5rem 0; /* Tạo khoảng trống cho thoáng */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05); /* Đường kẻ mờ lót dưới */
+    padding-bottom: 15px;
+}
+
+.section-header .section-title {
+    margin: 0; /* Xóa khoảng cách thừa của thẻ h3 */
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Nút See All phong cách hiện đại */
+.see-all-btn {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.see-all-btn:hover {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-h) 100%);
+    color: #fff;
+    transform: translateX(5px); /* Hiệu ứng trượt nhẹ sang phải */
+    box-shadow: 0 4px 15px rgba(255, 0, 128, 0.3); /* Phát sáng nhẹ */
+}
+
+
+/* =========================================
+   TRANG CHỦ - STATS SECTION (BẢNG THỐNG KÊ)
+========================================= */
+
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Chia đều 3 cột */
+    gap: 25px;
+    margin: 2rem 0 3rem 0;
+}
+
+.stat-item {
+    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px); /* Trượt lên khi hover */
+    border-color: var(--accent);
+}
+
+.stat-item h3 {
+    font-size: 3rem; /* Cỡ chữ to đùng cho số liệu */
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    font-weight: 900;
+    text-shadow: 0 0 20px rgba(255, 0, 128, 0.4); /* Số liệu phát sáng */
+}
+
+.stat-item p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* Đảm bảo Responsive trên điện thoại */
+@media (max-width: 768px) {
+    .stats-section {
+        grid-template-columns: 1fr; /* Gộp thành 1 cột trên mobile */
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }

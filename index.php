@@ -1,13 +1,13 @@
-<?php require_once 'db-connect.php';
-require_once 'functions.php';
+<?php require_once 'includes/db-connect.php';
+require_once 'includes/functions.php';
 $page_title = 'Home';
 
-$topGames = getTopGames($conn, 8);
-$recentGames = getRecentGames($conn, 4);
+$topGames = getTopGames($conn, 10);
+$recentGames = getRecentGames($conn, 10);
 
 $stat = getStat($conn);
 
-require_once 'header.php'; ?>
+require_once 'includes/header.php'; ?>
 <div class="welcome-section">
     <div class="container">
         <h1>Discover the Whole World of Games</h1>
@@ -30,11 +30,14 @@ require_once 'header.php'; ?>
         </div>
     </div>
 
-    <h3 class="section-title">Top Rating Games:</h3>
+    <div class="section-header">
+        <h3 class="section-title">Top Rating Games:</h3>
+        <a href="game/games.php?sort=top_rated" class="see-all-btn">See All &rarr;</a>
+    </div>
     <div class="grid-games">
         <?php foreach ($topGames as $g): ?>
-            <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
-                <img src="<?= coverSrc($g['cover_image']) ?>" alt=" <?= sanitize($g['title']) ?>">
+            <a href="<?= $baseUrl ?>game/game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
+                <img src="<?= coverSrc($g['cover_image']) ?>" alt="<?= sanitize($g['title']) ?>">
                 <div class="card-title">
                     <p><?= sanitize($g['title']) ?></p>
                     <div class="card-info">
@@ -50,12 +53,14 @@ require_once 'header.php'; ?>
         <?php endforeach ?>
     </div>
 
-    <h3 class="section-title">Recent Added Games:</h3>
+    <div class="section-header">
+        <h3 class="section-title">Recent Added Games:</h3>
+        <a href="game/games.php?sort=newest" class="see-all-btn">See All &rarr;</a>
+    </div>
     <div class="grid-games">
-
         <?php foreach ($recentGames as $g): ?>
-            <a href="game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
-                <img src="<?= coverSrc($g['cover_image']) ?>" alt=" <?= sanitize($g['title']) ?>">
+            <a href="<?= $baseUrl ?>game/game-detail.php?id=<?= (int)$g['id'] ?>" class="game-card">
+                <img src="<?= coverSrc($g['cover_image']) ?>" alt="<?= sanitize($g['title']) ?>">
                 <div class="card-title">
                     <p><?= sanitize($g['title']) ?></p>
                     <div class="card-info">
@@ -73,4 +78,4 @@ require_once 'header.php'; ?>
 </section>
 
 
-<?php require_once 'footer.php'; ?>
+<?php require_once 'includes/footer.php'; ?>

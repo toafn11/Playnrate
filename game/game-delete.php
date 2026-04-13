@@ -1,6 +1,8 @@
 <?php
-require_once 'db-connect.php';
-require_once 'functions.php';
+require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
+
+if (checkAdmin() === false) redirect('../index.php');
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) redirect('games.php');
@@ -9,14 +11,15 @@ $game = getGameDetail($conn, $id);
 if (!$game) redirect('games.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
-    if (delGame($conn, $game))
+    if (delGame($conn, $game)) {
+        writeLog($conn, $_SESSION['userid'], 'DELETE_GAME', "Deleted game: " . $game['title'] . " (ID: " . $game['id'] . ")");
         redirect('games.php?deleted=1');
-    else
+    } else
         redirect('game-delete.php?id=' . $id);
 }
 
 $pageTitle = 'Delete: ' . $game['title'];
-require_once 'header.php';
+require_once '../includes/header.php';
 ?>
 
 
@@ -33,9 +36,9 @@ require_once 'header.php';
             <form method="POST">
                 <button type="submit" name="confirm_delete" class="btn btn-danger">Yes, Delete Game</button>
             </form>
-            <a href="game-detail.php?id=<?= $id ?>" class="btn btn-secondary">No, Go Back</a>
+            <a href="./game-detail.php?id=<?= $id ?>" class="btn btn-secondary">No, Go Back</a>
         </div>
     </div>
 </div>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

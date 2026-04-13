@@ -1,6 +1,7 @@
 <?php
-require_once 'db-connect.php';
-require_once 'functions.php';
+require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
+if (checkAdmin() === false) redirect('index.php');
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) redirect('games.php');
@@ -39,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $upd = updateGame($conn, $formData, $id);
 
         if ($upd === true) {
+            writeLog($conn, $_SESSION['userid'], 'UPDATE_GAME', "Updated details for game: " . $title);
             redirect("game-detail.php?id=$id&updated=1");
         } else {
             $errors = $upd;
@@ -54,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 $all_genres = getAllGenres($conn);
 $all_platforms = getAllPlatforms($conn);
 $pageTitle = 'Edit: ' . $game['title'];
-require_once 'header.php';
+require_once '../includes/header.php';
 ?>
 
 <section class="container" style="margin-top: 2rem; margin-bottom: 4rem;">
@@ -138,8 +140,8 @@ require_once 'header.php';
 
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                 <button type="submit" class="btn btn-primary" style="flex: 2;">💾 Save Changes</button>
-                <a href="game-detail.php?id=<?= $id ?>" class="btn btn-secondary" style="flex: 1;">Cancel</a>
-                <a href="game-delete.php?id=<?= $id ?>" class="btn btn-danger" style="margin-left: auto;">🗑️ Delete</a>
+                <a href="./game-detail.php?id=<?= $id ?>" class="btn btn-secondary" style="flex: 1;">Cancel</a>
+                <a href="./game-delete.php?id=<?= $id ?>" class="btn btn-danger" style="margin-left: auto;">🗑️ Delete</a>
             </div>
         </div>
     </form>
@@ -158,4 +160,4 @@ require_once 'header.php';
     }
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

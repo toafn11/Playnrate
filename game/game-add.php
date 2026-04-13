@@ -1,6 +1,7 @@
 <?php
-require_once 'db-connect.php';
-require_once 'functions.php';
+require_once '../includes/db-connect.php';
+require_once '../includes/functions.php';
+if (checkAdmin() === false) redirect('../index.php');
 
 $pageTitle = 'Add New Game';
 $errors = [];
@@ -37,9 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $addResult = addGame($conn, $formData);
 
         if (is_int($addResult)) {
+            writeLog($conn, isset($_SESSION['userid']) ? $_SESSION['userid'] : '0', 'ADD_GAME', "Added a new game titled: " . $title);
             redirect("game-detail.php?id=$addResult&created=1");
             exit;
         } else {
+            if ($coverFile !== 'images/placeholder.png') {
+                $imagePath = __DIR__ . '/uploads/' . $coverFile;
+                if (file_exists($imagePath)) {
+                    @unlink($imagePath);
+                }
+            }
             $errors['db'] = "Failed to add game to database.";
         }
     }
@@ -47,12 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 $all_genres = getAllGenres($conn);
 $all_platforms = getAllPlatforms($conn);
-require_once 'header.php';
+require_once '../includes/header.php';
 ?>
 
 <section class="container" style="margin-top: 2rem;">
     <?php if (isset($errors['db'])): ?>
-        <div class="alert alert-error">❌ <?= $errors['db'] ?></div>
+        <div class="alert alert-error" style="background-color: #fee; border: 1px solid #f00; color: #c00; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px; font-weight: 500;">
+            ❌ <?= $errors['db'] ?>
+        </div>
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data" class="game-intro form-card" style="display: flex; gap: 2rem; align-items: flex-start;">
@@ -108,8 +118,9 @@ require_once 'header.php';
             </div>
 
             <div class="form-group">
-                <label for="description">Description *</label>
+                <label for="description">Description * <span style="font-size: 0.85rem; color: var(--text-muted);">(minimum 10 characters)</span></label>
                 <textarea id="description" name="description" rows="5" required><?= sanitize($description) ?></textarea>
+                <?php if (isset($errors['description'])): ?><span class="error-msg" style="display: block; background-color: #fee; border: 1px solid #f00; color: #c00; padding: 0.5rem; margin-top: 0.5rem; border-radius: 3px;">⚠️ <?= $errors['description'] ?></span><?php endif; ?>
             </div>
 
             <div class="form-group">
@@ -142,6 +153,23 @@ require_once 'header.php';
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    // Real-time description validation
+    document.getElementById('description').addEventListener('input', function() {
+        const count = this.value.trim().length;
+        const minChars = 10;
+        const remaining = minChars - count;
+
+        if (count === 0) {
+            this.style.borderColor = '';
+        } else if (count < minChars) {
+            this.style.borderColor = '#ffa500';
+            this.title = `${remaining} more characters needed (${count}/${minChars})`;
+        } else {
+            this.style.borderColor = '#00aa00';
+            this.title = `Valid: ${count} characters`;
+        }
+    });
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>
