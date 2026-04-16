@@ -19,14 +19,6 @@ require_once '../includes/header.php'; ?>
 <section class="container-login">
     <div>
         <form class="login-site" action="login.php" method="POST">
-            <?php if (isset($_SESSION['flash_success'])): ?>
-                <div style="background: var(--success); color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    <?= $_SESSION['flash_success'] ?>
-                </div>
-                <?php
-                unset($_SESSION['flash_success']);
-                ?>
-            <?php endif; ?>
             <?php if ($error_message !== ""): ?>
                 <div style="background: var(--danger); color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
                     <?= $error_message ?>

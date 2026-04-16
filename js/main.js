@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (score) {
                 const s = parseInt(score.value);
                 if (isNaN(s) || s < 1 || s > 10) {
-                    alert('Score must be between 1 and 10.'); // Tạm dùng alert hoặc hàm showFieldError của bạn
+                    alert('Score must be between 1 and 10.');
                     valid = false;
                 }
             }

@@ -107,3 +107,26 @@ CREATE TABLE `logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 COMMIT;
+
+
+DELIMITER $$
+CREATE TRIGGER after_rating_insert
+AFTER INSERT ON ratings
+FOR EACH ROW
+BEGIN
+    UPDATE games
+    SET avg_rating  = (SELECT ROUND(AVG(score),1) FROM ratings WHERE game_id = NEW.game_id),
+        rating_count = (SELECT COUNT(*) FROM ratings WHERE game_id = NEW.game_id)
+    WHERE id = NEW.game_id;
+END$$
+
+-- CREATE TRIGGER after_rating_delete
+-- AFTER DELETE ON ratings
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE games
+--     SET avg_rating  = COALESCE((SELECT ROUND(AVG(score),1) FROM ratings WHERE game_id = OLD.game_id), 0.0),
+--         rating_count = (SELECT COUNT(*) FROM ratings WHERE game_id = OLD.game_id)
+--     WHERE id = OLD.game_id;
+-- END$$
+-- DELIMITER ;
