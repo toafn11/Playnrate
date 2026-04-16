@@ -143,7 +143,6 @@ require_once '../includes/header.php';
 </section>
 
 <script>
-    // Hàm preview ảnh cực nhanh
     function previewImage(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -154,7 +153,6 @@ require_once '../includes/header.php';
         }
     }
 
-    // Real-time description validation
     document.getElementById('description').addEventListener('input', function() {
         const count = this.value.trim().length;
         const minChars = 10;

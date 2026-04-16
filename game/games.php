@@ -8,7 +8,7 @@ $genreId = (int)($_GET['genre'] ?? 0);
 $sort    = in_array($_GET['sort'] ?? '', ['newest', 'oldest', 'top_rated', 'most_reviews', 'a_z', 'z_a'])
     ? $_GET['sort'] : 'newest';
 $page    = max(1, (int)($_GET['page'] ?? 1));
-$perPage = 10;
+$perPage = 15;
 
 $result     = getFilteredGames($conn, $search, $genreId, $sort, $perPage, $page);
 $games      = $result['games'];
@@ -45,8 +45,8 @@ require_once '../includes/header.php'; ?>
             </select>
 
             <select name="sort">
-                <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest</option>
-                <option value="oldest" <?= $sort === 'oldest' ? 'selected' : '' ?>>Oldest</option>
+                <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest Add</option>
+                <option value="oldest" <?= $sort === 'oldest' ? 'selected' : '' ?>>Oldest Add</option>
                 <option value="top_rated" <?= $sort === 'top_rated' ? 'selected' : '' ?>>Top Rated</option>
                 <option value="most_reviews" <?= $sort === 'most_reviews' ? 'selected' : '' ?>>Most Reviews</option>
                 <option value="a_z" <?= $sort === 'a_z' ? 'selected' : '' ?>>A – Z</option>

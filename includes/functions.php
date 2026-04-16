@@ -12,17 +12,6 @@ function redirect(string $url): void
     exit;
 }
 
-function starRating(float $score): string
-{
-    $full  = (int) round($score / 2);
-    $empty = 5 - $full;
-    $html  = '<span class="stars" title="' . number_format($score, 1) . '/10">';
-    $html .= str_repeat('<i class="star full">★</i>', $full);
-    $html .= str_repeat('<i class="star empty">☆</i>', $empty);
-    $html .= '</span>';
-    return $html;
-}
-
 function uploadCover(array $file, string &$error): string|false
 {
     $allowed   = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -68,14 +57,6 @@ function coverSrc(?string $filename): string
     }
 
     return $baseUrl . 'images/placeholder.png';
-}
-
-function paginate(int $total, int $perPage, int $page): array
-{
-    $totalPages = max(1, (int) ceil($total / $perPage));
-    $page       = max(1, min($page, $totalPages));
-    $offset     = ($page - 1) * $perPage;
-    return [$offset, $totalPages, $page];
 }
 
 function getTopGames(mysqli $conn, int $limit): array
@@ -255,6 +236,7 @@ function getGamePlatform(mysqli $conn, int $id)
     }
     return $platforms;
 }
+
 function getGamePlatformIDs(mysqli $conn, int $id)
 {
     $stmt = $conn->prepare("SELECT platform_id FROM game_platforms WHERE game_id = ?");
