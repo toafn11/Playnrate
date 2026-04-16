@@ -1,26 +1,17 @@
 <?php
 
-/**
- * Sanitise a string from user input.
- */
 function sanitize(?string $value): string
 {
     if ($value === null) return '';
     return htmlspecialchars(strip_tags(trim($value)), ENT_QUOTES, 'UTF-8');
 }
 
-/**
- * Redirect to a URL.
- */
 function redirect(string $url): void
 {
     header("Location: $url");
     exit;
 }
 
-/**
- * Render star rating HTML (out of 10 mapped to 5 stars).
- */
 function starRating(float $score): string
 {
     $full  = (int) round($score / 2);
@@ -32,9 +23,6 @@ function starRating(float $score): string
     return $html;
 }
 
-/**
- * Handle cover image upload. Returns filename on success, false on failure.
- */
 function uploadCover(array $file, string &$error): string|false
 {
     $allowed   = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -82,9 +70,6 @@ function coverSrc(?string $filename): string
     return $baseUrl . 'images/placeholder.png';
 }
 
-/**
- * Paginate helper – returns [offset, totalPages].
- */
 function paginate(int $total, int $perPage, int $page): array
 {
     $totalPages = max(1, (int) ceil($total / $perPage));
@@ -324,11 +309,10 @@ function addGame(mysqli $conn, array $data)
 
 function delGame(mysqli $conn, array $data)
 {
-    // Delete cover image if it exists and is not the default
     if (!empty($data['cover_image']) && $data['cover_image'] !== 'default-cover.jpg') {
         $path = __DIR__ . '/../uploads/' . $data['cover_image'];
         if (file_exists($path)) {
-            @unlink($path); // Suppress warnings if file can't be deleted
+            @unlink($path);
         }
     }
     $del = $conn->prepare("DELETE FROM games WHERE id = ?");
